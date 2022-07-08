@@ -5,15 +5,16 @@ import 'package:flutter/src/widgets/framework.dart';
 import 'dart:developer';
 
 class MainPage extends StatefulWidget {
-  const MainPage({Key? key}) : super(key: key);
-
+  final token;
+  MainPage({this.token, Key? key}) : super(key: key);
+  
   @override
   State<MainPage> createState() => _MainPageState();
 }
 
 class _MainPageState extends State<MainPage> {
 
-  var _currentIndex = 1;
+  var _currentIndex = 0;
 
   @override
   Widget build(BuildContext context) {
