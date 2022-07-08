@@ -1,10 +1,12 @@
+import 'package:cs496_2nd_week/pages/start_loading_page.dart';
+import 'package:cs496_2nd_week/utils/fade_page_route.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/src/foundation/key.dart';
-import 'package:flutter/src/widgets/framework.dart';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 
 class MyinfoPage extends StatelessWidget {
   const MyinfoPage({Key? key}) : super(key: key);
 
+  static const storage = FlutterSecureStorage();
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -114,7 +116,10 @@ class MyinfoPage extends StatelessWidget {
                     shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(20)),
                     color: Color(0xFFF5F6F9),
-                    onPressed: () {},
+                    onPressed: () { 
+                      storage.delete(key: 'token');
+                      Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => const StartLoadingPage()),);
+                    },
                     child: Row(children: [
                       Icon(
                         Icons.logout_outlined,

@@ -1,3 +1,4 @@
+import 'package:cs496_2nd_week/pages/my_info.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/src/foundation/key.dart';
@@ -23,7 +24,7 @@ class _MainPageState extends State<MainPage> {
       body: IndexedStack(
         index: _currentIndex,
         children: <Widget>[
-          Container(), Container(), Container(), Container(),
+          Container(), Container(), Container(), MyinfoPage(),
         ],
       ),
       bottomNavigationBar: BottomNavigationBar(

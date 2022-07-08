@@ -36,7 +36,7 @@ class _StartLoadingPageState extends State<StartLoadingPage> {
         await storage.deleteAll();
         prefs.setBool('first_run', false);
       }
-      String? token = await storage.read(key: "login");
+      String? token = await storage.read(key: 'token');
       while(stopwatch.elapsedMilliseconds < 500) {
         await Future.delayed(const Duration(milliseconds: 200));
       }

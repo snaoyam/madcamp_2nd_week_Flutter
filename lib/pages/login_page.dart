@@ -17,8 +17,9 @@ class LoginPage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       body: Container(
-        margin: EdgeInsets.fromLTRB(MediaQuery.of(context).size.width * 0.1, 0, MediaQuery.of(context).size.width * 0.1, 0),
-        alignment: Alignment.centerLeft,
+        width: MediaQuery.of(context).size.width,
+        height: MediaQuery.of(context).size.height,
+        padding: EdgeInsets.fromLTRB(MediaQuery.of(context).size.width * 0.1, 0, MediaQuery.of(context).size.width * 0.1, 0),
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
@@ -27,7 +28,10 @@ class LoginPage extends StatelessWidget {
               child: Text('Welcome to App!', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 28), ),
             ),
             const SizedBox(height: 10,),
-            const Text('App은 자신이 만든 프로젝트를 공유하고 발전시킬 수 있는 플랫폼입니다', style: TextStyle(fontSize: 16), ),
+            const Align(
+              alignment: Alignment.centerLeft,
+              child: Text('App은 자신이 만든 프로젝트를 공유하고 발전시킬 수 있는 플랫폼입니다', style: TextStyle(fontSize: 16), ),
+            ),
             const SizedBox(height: 10,),
             OutlinedButton(
               onPressed: () {},
