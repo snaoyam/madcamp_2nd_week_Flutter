@@ -1,4 +1,5 @@
-import 'package:cs496_2nd_week/pages/my_info.dart';
+import 'package:cs496_2nd_week/pages/main_home.dart';
+import 'package:cs496_2nd_week/pages/main_my_info.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -23,9 +24,11 @@ class _MainPageState extends State<MainPage> {
     return Scaffold(
       appBar: AppBar(
         systemOverlayStyle: const SystemUiOverlayStyle(statusBarBrightness: Brightness.light),
-        leading: IconButton(
-          icon: const Icon(Icons.arrow_back_ios, color: Colors.black,),
-          onPressed: () => Navigator.of(context).pop(),
+        shape: const Border(
+          bottom: BorderSide(
+            color: Colors.black26,
+            width: 1
+          )
         ),
         backgroundColor: Colors.transparent,
         elevation: 0,
@@ -33,7 +36,7 @@ class _MainPageState extends State<MainPage> {
       body: IndexedStack(
         index: _currentIndex,
         children: <Widget>[
-          Container(), Container(), Container(), MyinfoPage(),
+          MainHome(), Container(), Container(), MyinfoPage(),
         ],
       ),
       bottomNavigationBar: BottomNavigationBar(

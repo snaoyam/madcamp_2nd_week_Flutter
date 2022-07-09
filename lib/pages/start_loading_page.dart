@@ -42,10 +42,10 @@ class _StartLoadingPageState extends State<StartLoadingPage> {
       }
       if(mounted) {
         if(token != null) {
-          Navigator.pushReplacement(context, FadePageRoute(MainPage(token: token)));
+          Navigator.pushAndRemoveUntil(context, FadePageRoute(MainPage(token: token)), (_) => false);
         }
         else {
-          Navigator.pushReplacement(context, FadePageRoute(const LoginPage()));
+          Navigator.pushAndRemoveUntil(context, FadePageRoute(const LoginPage()), (_) => false);
         } 
       }
       return;

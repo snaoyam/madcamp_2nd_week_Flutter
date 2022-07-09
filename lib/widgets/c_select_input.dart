@@ -55,8 +55,8 @@ class _CSelectInputState extends State<CSelectInput> {
             buttonPadding: const EdgeInsets.all(12),
             buttonDecoration: BoxDecoration(
               border: Border.all(
-                color: Colors.black,
-                width: 0.5,
+                color: Color.fromARGB(255, 80, 80, 80), //Colors.black26
+                width: 1,
               ),
               borderRadius: BorderRadius.circular(6),
             ),

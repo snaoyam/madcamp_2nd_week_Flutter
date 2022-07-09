@@ -40,8 +40,8 @@ class _CTextInputState extends State<CTextInput> {
           style: const TextStyle(fontSize: 16),
           decoration: BoxDecoration(
             border: Border.all(
-              color: Colors.black,
-              width: 0.5,
+              color: Color.fromARGB(255, 80, 80, 80),
+              width: 1,
             ),
             borderRadius: BorderRadius.circular(6),
           ),
