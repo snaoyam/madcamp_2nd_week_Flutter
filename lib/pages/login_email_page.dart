@@ -1,13 +1,14 @@
 import 'dart:convert';
-
 import 'package:cs496_2nd_week/pages/main_page.dart';
 import 'package:cs496_2nd_week/pages/signup_page.dart';
 import 'package:cs496_2nd_week/utils/fade_page_route.dart';
 import 'package:cs496_2nd_week/widgets/base_app_bar.dart';
+import 'package:cs496_2nd_week/widgets/c_text_input.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:http/http.dart' as http;
@@ -25,15 +26,16 @@ class _LoginEmailPageState extends State<LoginEmailPage> {
   TextEditingController idController = TextEditingController();
   TextEditingController passController = TextEditingController();
 
-  _postRequest(String id, String pw) async {
+  _postRequest(String username, String password) async {
     String? url = dotenv.env['HOST'];
+    String? port = dotenv.env['PORT'];
     if(url == null) { print("_postRequest"); return; }
     Map<String, String> data = {
-      'username': id,
-      'password': pw,
+      'username': username,
+      'password': password,
     };
     http.Response response = await http.post(
-      Uri.parse('http://' + url + ':5000/user/login'),
+      Uri.parse('http://$url:$port/user/login'),
       headers: <String, String> {
         'Content-Type': 'application/json',
       },
@@ -46,51 +48,38 @@ class _LoginEmailPageState extends State<LoginEmailPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      extendBodyBehindAppBar: true,
       appBar: AppBar(
+        systemOverlayStyle: const SystemUiOverlayStyle(statusBarBrightness: Brightness.light),
         leading: IconButton(
           icon: const Icon(Icons.arrow_back_ios, color: Colors.black,),
           onPressed: () => Navigator.of(context).pop(),
         ),
-        shadowColor: Colors.transparent,
         backgroundColor: Colors.transparent,
+        elevation: 0,
       ),
-      body: Container(
-        margin: EdgeInsets.fromLTRB(MediaQuery.of(context).size.width * 0.1, 0, MediaQuery.of(context).size.width * 0.1, 0),
-        alignment: Alignment.centerLeft,
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Form(child: Column(
+      body: Center(
+        child: SingleChildScrollView(
+          scrollDirection: Axis.vertical,
+          child: ConstrainedBox(
+            constraints: BoxConstraints(
+              maxWidth: MediaQuery.of(context).size.width * 0.8 < 500 ? MediaQuery.of(context).size.width * 0.8 : 500,
+            ),
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                CupertinoTextField(
-                  placeholder: "ID or email address",
-                  padding: EdgeInsets.all(12),
+                SizedBox(height: 16,),
+                CTextInput(
+                  title: '아이디 또는 이메일',
+                  placeholder: 'username or email address',
                   controller: idController,
-                  style: TextStyle(fontSize: 16),
-                  decoration: BoxDecoration(
-                    border: Border.all(
-                      color: Colors.black,
-                      width: 0.5,
-                    ),
-                    borderRadius: BorderRadius.circular(6),
-                  ),
                 ),
-                const SizedBox(height: 4,),
-                CupertinoTextField(
-                  placeholder: "Password",
+                CTextInput(
+                  title: '비밀번호',
+                  placeholder: 'Password',
                   obscureText: true,
-                  padding: EdgeInsets.all(12),
                   controller: passController,
-                  style: TextStyle(fontSize: 16),
-                  decoration: BoxDecoration(
-                    border: Border.all(
-                      color: Colors.black,
-                      width: 0.5,
-                    ),
-                    borderRadius: BorderRadius.circular(6),
-                  ),
                 ),
-                const SizedBox(height: 12,),
                 OutlinedButton(
                   onPressed: () async {
                     if(idController.text.toString() != '' && passController.text.toString() != '') {
@@ -111,9 +100,9 @@ class _LoginEmailPageState extends State<LoginEmailPage> {
                   style: ElevatedButton.styleFrom(
                     minimumSize: const Size.fromHeight(40),
                   ),
-                  child: Text("로그인", style: TextStyle(fontSize: 16)),
+                  child: const Text("로그인", style: TextStyle(fontSize: 16)),
                 ),
-                SizedBox(height: 2,),
+                const SizedBox(height: 2,),
                 Align(
                   alignment: Alignment.centerRight,
                   child: RichText(
@@ -127,10 +116,9 @@ class _LoginEmailPageState extends State<LoginEmailPage> {
                   ),
                 ),
               ],
-            )),
-            SizedBox(height: 192,),
-          ],
-        )
+            ),
+          ),
+        ),
       )
     );
   }

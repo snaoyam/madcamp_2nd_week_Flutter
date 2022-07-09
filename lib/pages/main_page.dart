@@ -1,6 +1,7 @@
 import 'package:cs496_2nd_week/pages/my_info.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter/src/foundation/key.dart';
 import 'package:flutter/src/widgets/framework.dart';
 import 'dart:developer';
@@ -20,7 +21,15 @@ class _MainPageState extends State<MainPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: Text('App', style: TextStyle(fontSize: 14, fontWeight: FontWeight.bold, color: Colors.black) ), ),
+      appBar: AppBar(
+        systemOverlayStyle: const SystemUiOverlayStyle(statusBarBrightness: Brightness.light),
+        leading: IconButton(
+          icon: const Icon(Icons.arrow_back_ios, color: Colors.black,),
+          onPressed: () => Navigator.of(context).pop(),
+        ),
+        backgroundColor: Colors.transparent,
+        elevation: 0,
+      ),
       body: IndexedStack(
         index: _currentIndex,
         children: <Widget>[
