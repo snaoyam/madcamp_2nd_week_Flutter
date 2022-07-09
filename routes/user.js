@@ -49,7 +49,7 @@ router.route("/login").post((req, res) => {
 //사용자 추가
 router.route("/register").post((req, res) => {
     console.log("inside the register");
-    // console.log(req)
+    console.log(req)
     const user = new User({
         username: req.body.username,
         password: req.body.password,
