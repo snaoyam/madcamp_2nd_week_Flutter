@@ -91,136 +91,141 @@ class _SignupPageState extends State<SignupPage> {
       body: Center(
         child: SingleChildScrollView(
           scrollDirection: Axis.vertical,
-          child: ConstrainedBox(
-            constraints: BoxConstraints(
-              maxWidth: MediaQuery.of(context).size.width * 0.8 < 500 ? MediaQuery.of(context).size.width * 0.8 : 500,
-            ),
-            child: Column(
-              children: [
-                ConstrainedBox(constraints: BoxConstraints(minHeight: 64),),
-                SizedBox(
-                  height: MediaQuery.of(context).size.height * 0.25,
-                  child: Center(
-                    child: ConstrainedBox(
-                      constraints: BoxConstraints(
-                        maxWidth: MediaQuery.of(context).size.width * 0.5,
-                      ),
-                      child: SvgPicture.asset('assets/images/cat0.svg', width: 240,),
-                    )
-                  ),
+          child: FractionallySizedBox(
+            widthFactor: 1,
+            child: Center(
+              child: ConstrainedBox(
+                constraints: BoxConstraints(
+                  maxWidth: MediaQuery.of(context).size.width * 0.8 < 500 ? MediaQuery.of(context).size.width * 0.8 : 500,
                 ),
-                SizedBox(height: 8,),
-                const Align(
-                  alignment: Alignment.centerLeft,
-                  child: Text('환영합니다! >_<', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 28), ),
-                ),
-                const SizedBox(height: 4,),
-                const Align(
-                  alignment: Alignment.centerLeft,
-                  child: Text('몇 가지 정보로 새로운 계정을 만들어보세요!', style: TextStyle(fontSize: 16), ),
-                ),
-                const SizedBox(height: 16,),
-                Form(
-                  child: Column(
-                    children: [
-                      CTextInput(
-                        title: '이름',
-                        placeholder: '김몰입',
-                        controller: textController['name'],
-                        isError: (isError['name'] ?? 0) != 0,
-                        errorText: '이름을 입력해주세요.',
-                      ),
-                      Row(
-                        children: [
-                          Flexible(
-                            flex: 2,
-                            child: CSelectInput(
-                              title: '몰입캠프 수강 시기',
-                              controller: textController['year']!,
-                              list: const ['2022 여름', '2021 겨울', '2021 여름', '2020 겨울', '2020 여름', '2019 겨울', '2019 여름'], 
-                              placeholder: "placeholder"
-                            ),
+                child: Column(
+                  children: [
+                    ConstrainedBox(constraints: BoxConstraints(minHeight: 64),),
+                    SizedBox(
+                      height: MediaQuery.of(context).size.height * 0.25,
+                      child: Center(
+                        child: ConstrainedBox(
+                          constraints: BoxConstraints(
+                            maxWidth: MediaQuery.of(context).size.width * 0.5,
                           ),
-                          const SizedBox(width: 16,),
-                          Flexible(
-                            flex: 1,
-                            child: CSelectInput(
-                              title: '분반',
-                              controller: textController['class']!,
-                              list: const ['1', '2', '3', '4'], 
-                              placeholder: "placeholder"
-                            ),
+                          child: SvgPicture.asset('assets/images/cat0.svg', width: 240,),
+                        )
+                      ),
+                    ),
+                    SizedBox(height: 8,),
+                    const Align(
+                      alignment: Alignment.centerLeft,
+                      child: Text('환영합니다! >_<', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 28), ),
+                    ),
+                    const SizedBox(height: 4,),
+                    const Align(
+                      alignment: Alignment.centerLeft,
+                      child: Text('몇 가지 정보로 새로운 계정을 만들어보세요!', style: TextStyle(fontSize: 16), ),
+                    ),
+                    const SizedBox(height: 16,),
+                    Form(
+                      child: Column(
+                        children: [
+                          CTextInput(
+                            title: '이름',
+                            placeholder: '김몰입',
+                            controller: textController['name'],
+                            isError: (isError['name'] ?? 0) != 0,
+                            errorText: '이름을 입력해주세요.',
+                          ),
+                          Row(
+                            children: [
+                              Flexible(
+                                flex: 2,
+                                child: CSelectInput(
+                                  title: '몰입캠프 수강 시기',
+                                  controller: textController['year']!,
+                                  list: const ['2022 여름', '2021 겨울', '2021 여름', '2020 겨울', '2020 여름', '2019 겨울', '2019 여름'], 
+                                  placeholder: "placeholder"
+                                ),
+                              ),
+                              const SizedBox(width: 16,),
+                              Flexible(
+                                flex: 1,
+                                child: CSelectInput(
+                                  title: '분반',
+                                  controller: textController['class']!,
+                                  list: const ['1', '2', '3', '4'], 
+                                  placeholder: "placeholder"
+                                ),
+                              ),
+                            ],
+                          ),
+                          CTextInput(
+                            title: '이메일',
+                            placeholder: 'madcamp@example.com',
+                            controller: textController['email'],
+                            isError: (isError['email'] ?? 0) != 0,
+                            errorText: isError['email'] == 2 ? '올바른 이메일을 입력해주세요.' : '이메일을 입력해주세요.',
+                          ),
+                          CTextInput(
+                            title: '아이디',
+                            placeholder: 'username',
+                            controller: textController['username'],
+                            isError: (isError['username'] ?? 0) != 0,
+                            errorText: isError['username'] == 2 ? '4자 이상으로 입력해주세요.' : '아이디를 입력해주세요.',
+                          ),
+                          CTextInput(
+                            title: '비밀번호',
+                            placeholder: 'password',
+                            obscureText: true,
+                            controller: textController['password'],
+                            isError: (isError['password'] ?? 0) != 0,
+                            errorText: isError['password'] == 2 ? '4자 이상으로 입력해주세요.' : '비밀번호를 입력해주세요.',
+                          ),
+                          CTextInput(
+                            title: '비밀번호 확인',
+                            placeholder: 're-type password',
+                            obscureText: true,
+                            controller: textController['password_check'],
+                            isError: (isError['password_check'] ?? 0) != 0,
+                            errorText: isError['password_check'] == 2 ? '비밀번호가 일치하지 않습니다.' : '비밀번호를 다시 입력해주세요.',
                           ),
                         ],
                       ),
-                      CTextInput(
-                        title: '이메일',
-                        placeholder: 'madcamp@example.com',
-                        controller: textController['email'],
-                        isError: (isError['email'] ?? 0) != 0,
-                        errorText: isError['email'] == 2 ? '올바른 이메일을 입력해주세요.' : '이메일을 입력해주세요.',
+                    ),
+                    const SizedBox(height: 16,),
+                    OutlinedButton(
+                      onPressed: () async {
+                        _checkinput();
+                        if(isError.values.every((element) => element == 0)) {
+                          http.Response response = await _postRequest(textController);
+                          if(response.statusCode >= 200 && response.statusCode < 300) {
+                            String token = jsonDecode(response.body)['token'];
+                            await storage.write(
+                              key: 'token',
+                              value: token,
+                            ); //storage.delete(key: "login");
+                            Navigator.pushReplacement(context, FadePageRoute(MainPage(token: token)));
+                          }
+                          else {
+                            print('failed to register');
+                          }
+                        }
+                      },
+                      style: ElevatedButton.styleFrom(
+                        minimumSize: const Size.fromHeight(40)
                       ),
-                      CTextInput(
-                        title: '아이디',
-                        placeholder: 'username',
-                        controller: textController['username'],
-                        isError: (isError['username'] ?? 0) != 0,
-                        errorText: isError['username'] == 2 ? '4자 이상으로 입력해주세요.' : '아이디를 입력해주세요.',
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: const [
+                          //Icon(Icons.face, color: Colors.black), 
+                          //SizedBox(width: 8), 
+                          Text('회원가입하기', style: TextStyle(color: Color.fromARGB(255, 66, 66, 66)), )
+                        ],
                       ),
-                      CTextInput(
-                        title: '비밀번호',
-                        placeholder: 'password',
-                        obscureText: true,
-                        controller: textController['password'],
-                        isError: (isError['password'] ?? 0) != 0,
-                        errorText: isError['password'] == 2 ? '4자 이상으로 입력해주세요.' : '비밀번호를 입력해주세요.',
-                      ),
-                      CTextInput(
-                        title: '비밀번호 확인',
-                        placeholder: 're-type password',
-                        obscureText: true,
-                        controller: textController['password_check'],
-                        isError: (isError['password_check'] ?? 0) != 0,
-                        errorText: isError['password_check'] == 2 ? '비밀번호가 일치하지 않습니다.' : '비밀번호를 다시 입력해주세요.',
-                      ),
-                    ],
-                  ),
-                ),
-                const SizedBox(height: 16,),
-                OutlinedButton(
-                  onPressed: () async {
-                    _checkinput();
-                    if(isError.values.every((element) => element == 0)) {
-                      http.Response response = await _postRequest(textController);
-                      if(response.statusCode >= 200 && response.statusCode < 300) {
-                        String token = jsonDecode(response.body)['token'];
-                        await storage.write(
-                          key: 'token',
-                          value: token,
-                        ); //storage.delete(key: "login");
-                        Navigator.pushReplacement(context, FadePageRoute(MainPage(token: token)));
-                      }
-                      else {
-                        print('failed to register');
-                      }
-                    }
-                  },
-                  style: ElevatedButton.styleFrom(
-                    minimumSize: const Size.fromHeight(40)
-                  ),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: const [
-                      //Icon(Icons.face, color: Colors.black), 
-                      //SizedBox(width: 8), 
-                      Text('회원가입하기', style: TextStyle(color: Color.fromARGB(255, 66, 66, 66)), )
-                    ],
-                  ),
-                ),
-                SizedBox(height: 100,),
-                //Expanded(child: SizedBox.shrink()),
-              ],
-            )
+                    ),
+                    SizedBox(height: 100,),
+                    //Expanded(child: SizedBox.shrink()),
+                  ],
+                )
+              ),
+            ),
           ),
         ),
       )

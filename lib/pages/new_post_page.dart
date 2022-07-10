@@ -210,10 +210,9 @@ class _NewPostPageState extends State<NewPostPage> {
                       _checkinput();
                       if(widget.newPostController['githuburlError']?.text == '0') {
                         Map<String, dynamic> response = await _postRequest(widget.newPostController, _imageFileList);
-                        print(12);
                       }
                       else {
-                        print(1);
+                        print('failed to upload');
                       }
                     }, style: ButtonStyle(
                       overlayColor: MaterialStateProperty.all(Colors.black12),
