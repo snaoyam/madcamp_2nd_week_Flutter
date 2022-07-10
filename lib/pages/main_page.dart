@@ -20,6 +20,12 @@ class MainPage extends StatefulWidget {
 class _MainPageState extends State<MainPage> {
 
   var _currentIndex = 0;
+  Map<String, TextEditingController> newPostController = {
+    'name': TextEditingController(),
+    'url': TextEditingController(),
+    'urlError': TextEditingController(),
+    'description': TextEditingController(),
+  };
 
   Widget? _bottomButtons() {
     return _currentIndex == 0 ? FloatingActionButton(
@@ -28,7 +34,7 @@ class _MainPageState extends State<MainPage> {
         expand: true,
         context: context,
         backgroundColor: Colors.transparent,
-        builder: (context) => NewPostPage(),
+        builder: (context) => NewPostPage(newPostController: newPostController),
       ),
       backgroundColor: Colors.green,
       child: const Icon(

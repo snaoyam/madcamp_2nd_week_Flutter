@@ -39,7 +39,7 @@ class _ProjectCardViewState extends State<ProjectCardView> {
                 return Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    FittedBox(fit:BoxFit.fitWidth, child: Text(widget.title == '' ? (snapshot.data?[0] as Map<String, dynamic>)['name'] : widget.title, style: const TextStyle(fontSize: 32, fontWeight: FontWeight.bold, height: 1.0),)),
+                    FittedBox(fit: BoxFit.fitWidth, child: Text(widget.title == '' ? (snapshot.data?[0] as Map<String, dynamic>)['name'] : widget.title, style: const TextStyle(fontSize: 32, fontWeight: FontWeight.bold, height: 1.0),)),
                     Expanded(
                       child: Row(
                         children: [
