@@ -24,14 +24,17 @@ class _MainPageState extends State<MainPage> {
     return Scaffold(
       appBar: AppBar(
         systemOverlayStyle: const SystemUiOverlayStyle(statusBarBrightness: Brightness.light),
-        shape: const Border(
-          bottom: BorderSide(
-            color: Colors.black26,
-            width: 1
-          )
-        ),
-        backgroundColor: Colors.transparent,
+        //backgroundColor: Color.fromRGBO(107, 203, 110, 1),
         elevation: 0,
+        title: IndexedStack(
+          index: _currentIndex,
+          children: <Widget>[
+            Align(alignment: Alignment.center,child: Text('Home')),
+            Align(alignment: Alignment.center,child: Text('Top Projects')),
+            Align(alignment: Alignment.center,child: Text('Achievements')),
+            Align(alignment: Alignment.center,child: Text('My Info')),
+          ],
+        ),
       ),
       body: IndexedStack(
         index: _currentIndex,
@@ -41,10 +44,10 @@ class _MainPageState extends State<MainPage> {
       ),
       bottomNavigationBar: BottomNavigationBar(
         type: BottomNavigationBarType.fixed,
-        selectedItemColor: Colors.purple,
-        unselectedItemColor: Colors.black,
-        selectedIconTheme: const IconThemeData(color: Colors.purple),
-        unselectedIconTheme: const IconThemeData(color: Colors.black),
+        selectedItemColor: Colors.green,
+        //unselectedItemColor: Colors.black,
+        selectedIconTheme: const IconThemeData(color: Colors.green),
+        //unselectedIconTheme: const IconThemeData(color: Colors.black),
         currentIndex: _currentIndex,
         onTap: (index) {
           setState(() {

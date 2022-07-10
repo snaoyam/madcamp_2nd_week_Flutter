@@ -19,20 +19,25 @@ class _GithubAuthorChipState extends State<GithubAuthorChip> {
 
   @override
   Widget build(BuildContext context) {
-    return SizedBox(
-      height: widget.height,
-      child: Row(
-        children: [
-          AspectRatio(aspectRatio: 1, child: ClipOval(
-            child: Image.network(
-              widget.profileimage ?? '',
-              errorBuilder: (context, error, stackTrace) { return CircleAvatar(backgroundColor: Colors.black12,); },
-            )
-          )),
-          SizedBox(width: 2,),
-          Text(widget.name, style: TextStyle(fontSize: widget.height-4), textAlign: TextAlign.center,),
-          SizedBox(width: 6,),
-        ],
+    return Padding(
+      padding: EdgeInsets.only(bottom: 2),
+      child: SizedBox(
+        height: widget.height,
+        child: IntrinsicWidth(
+          child: Row(
+            children: [
+              AspectRatio(aspectRatio: 1, child: ClipOval(
+                child: Image.network(
+                  widget.profileimage ?? '',
+                  errorBuilder: (context, error, stackTrace) { return CircleAvatar(backgroundColor: Colors.black12,); },
+                )
+              )),
+              SizedBox(width: 2,),
+              Text(widget.name, style: TextStyle(fontSize: widget.height-4), textAlign: TextAlign.center,),
+              SizedBox(width: 6,),
+            ],
+          ),
+        ),
       ),
     );
   }

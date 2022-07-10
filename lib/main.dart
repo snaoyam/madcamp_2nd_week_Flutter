@@ -17,8 +17,8 @@ class MainApp extends StatelessWidget { // st stl stf
       title: "cs496 2nd week",
       theme: ThemeData(
         colorScheme:  Theme.of(context).colorScheme.copyWith(
-          primary: Colors.purple,
-          secondary: Colors.purple,
+          primary: Color(0xFFADCB00),
+          secondary: Colors.amber,
           primaryContainer: Colors.black,
         )
       ),
