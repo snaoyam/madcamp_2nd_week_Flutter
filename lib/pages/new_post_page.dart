@@ -91,14 +91,13 @@ class _NewPostPageState extends State<NewPostPage> {
           _addImageFile(image);
         }
       });
-      print(_imageFileList);
     } on Exception catch (e) {
       print(e);
     }
     return;
   }
 
-  Widget bottomSheet() {
+  Widget photobottomSheet() {
     return Container(
       height: 100,
       width: MediaQuery.of(context).size.width,
@@ -171,7 +170,7 @@ class _NewPostPageState extends State<NewPostPage> {
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     IconButton(onPressed: () {
-                      if(widget.newPostController['title']?.text == '' && widget.newPostController['githuburl']?.text == '' && widget.newPostController['description']?.text == '') {
+                      if(widget.newPostController['title']?.text == '' && widget.newPostController['githuburl']?.text == '' && widget.newPostController['description']?.text == '' && (_imageFileList ?? []).length == 0) {
                         widget.newPostController['githuburlError']?.text = '0';
                         Navigator.of(context).pop();
                       }
@@ -225,51 +224,72 @@ class _NewPostPageState extends State<NewPostPage> {
                         const Divider(thickness: 1, color: Colors.transparent,),
                         Align(alignment: Alignment.centerLeft, child: Text("사진 추가", style: TextStyle(fontSize: 16, color: Colors.black54),)),
                         SizedBox(height: 4,),
-                        SingleChildScrollView(
-                          scrollDirection: Axis.horizontal,
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.start,
-                            children: [
-                              GestureDetector(
-                                onTap: () {
-                                  showModalBottomSheet(
-                                      context: context,
-                                      builder: (builder) => bottomSheet());
-                                },
-                                child: SizedBox(
-                                  height: MediaQuery.of(context).size.height * 0.12 < 160 ? MediaQuery.of(context).size.height * 0.12 : 160,
-                                  child: AspectRatio(aspectRatio: 1, 
-                                    child: DottedBorder(
-                                      borderType: BorderType.RRect,
-                                      radius: Radius.circular(6),
-                                      padding: EdgeInsets.all(4),
-                                      dashPattern: [8, 6],
-                                      color: Colors.black54,
-                                      strokeWidth: 1,
-                                      child: const Center(
-                                        child: Icon(Icons.add, size: 40,),
-                                      )
-                                    ),
-                                  )
+                        Align(
+                          alignment: Alignment.centerLeft,
+                          child: SingleChildScrollView(
+                            scrollDirection: Axis.horizontal,
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.start,
+                              children: [
+                                GestureDetector(
+                                  onTap: () {
+                                    showModalBottomSheet(
+                                        context: context,
+                                        builder: (builder) => photobottomSheet());
+                                  },
+                                  child: SizedBox(
+                                    height: MediaQuery.of(context).size.height * 0.12 < 160 ? MediaQuery.of(context).size.height * 0.12 : 160,
+                                    child: AspectRatio(aspectRatio: 1, 
+                                      child: DottedBorder(
+                                        borderType: BorderType.RRect,
+                                        radius: Radius.circular(6),
+                                        padding: EdgeInsets.all(4),
+                                        dashPattern: [8, 6],
+                                        color: Colors.black54,
+                                        strokeWidth: 1,
+                                        child: const Center(
+                                          child: Icon(Icons.add, size: 40,),
+                                        )
+                                      ),
+                                    )
+                                  ),
                                 ),
-                              ),
-                              for(XFile image in (_imageFileList ?? [])) Padding(
-                                padding: EdgeInsets.only(left: 4),
-                                child: SizedBox(
-                                  height: MediaQuery.of(context).size.height * 0.12 < 160 ? MediaQuery.of(context).size.height * 0.12 : 160,
-                                  child: ClipRRect(
-                                    borderRadius: BorderRadius.circular(4),
-                                    child: AspectRatio(
-                                      aspectRatio: 1,
-                                      child: FittedBox(
-                                        fit: BoxFit.fill,
-                                        child: Image.file(File(image.path))
+                                for(XFile image in (_imageFileList ?? [])) Padding(
+                                  padding: EdgeInsets.only(left: 4),
+                                  child: SizedBox(
+                                    height: MediaQuery.of(context).size.height * 0.12 < 160 ? MediaQuery.of(context).size.height * 0.12 : 160,
+                                    child: ClipRRect(
+                                      borderRadius: BorderRadius.circular(4),
+                                      child: Stack(
+                                        alignment: AlignmentDirectional.topEnd,
+                                        children: [
+                                          AspectRatio(
+                                            aspectRatio: 1,
+                                            child: FittedBox(
+                                              fit: BoxFit.fill,
+                                              child: Image.file(File(image.path))
+                                            ),
+                                          ),
+                                          IconButton(
+                                            icon: Icon(Icons.clear), 
+                                            color: Colors.white,
+                                            splashRadius: 1,
+                                            splashColor: Colors.transparent,
+                                            onPressed: () {
+                                              setState(() {
+                                                _imageFileList?.removeWhere((element) => element.name == image.name);
+                                              });
+                                            },
+                                            padding: EdgeInsets.all(4),
+                                            constraints: BoxConstraints(),
+                                          ),
+                                        ],
                                       ),
                                     ),
                                   ),
                                 ),
-                              ),
-                            ],
+                              ],
+                            ),
                           ),
                         ),
                         const Divider(thickness: 1,),
