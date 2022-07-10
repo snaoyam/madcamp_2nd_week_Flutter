@@ -2,6 +2,7 @@ import 'package:cs496_2nd_week/utils/github_api.dart';
 import 'package:cs496_2nd_week/widgets/github_author_chip.dart';
 import 'package:flutter/material.dart';
 import 'package:shimmer/shimmer.dart';
+import 'package:cached_network_image/cached_network_image.dart';
 
 
 class ProjectCardView extends StatefulWidget {
@@ -90,7 +91,7 @@ class _ProjectCardViewState extends State<ProjectCardView> {
                             flex: 2,
                             child: Padding(
                               padding: const EdgeInsets.only(top: 10, left: 10),
-                              child: Image.network(
+                              child: Image.network( //CachedNetworkImage
                                 widget.imageurl,
                                 fit: BoxFit.cover, 
                                 errorBuilder: (context, error, stackTrace) { return Container(color: const Color.fromARGB(255, 230, 230, 230),); },

@@ -1,9 +1,10 @@
 import 'dart:convert';
 import 'dart:io';
-
+import 'dart:typed_data';
 import 'package:cs496_2nd_week/widgets/imagepicker.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter/src/foundation/key.dart';
 import 'package:flutter/src/widgets/framework.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
@@ -11,6 +12,7 @@ import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:dotted_border/dotted_border.dart';
 import 'package:http/http.dart' as http;
+import 'package:http_parser/http_parser.dart';
 
 class NewPostPage extends StatefulWidget {
   NewPostPage({Key? key, required this.newPostController}) : super(key: key);
@@ -22,15 +24,15 @@ class NewPostPage extends StatefulWidget {
 
 class _NewPostPageState extends State<NewPostPage> {
   
-  List<XFile>? _imageFileList = [];
+  List<File>? _imageFileList = [];
 
-  void _addImageFile(XFile? value) {
+  void _addImageFile(XFile? value) async {
     if(value != null) {
-      _imageFileList = (_imageFileList ?? [])..add(value);
+      _imageFileList = (_imageFileList ?? [])..add(File(value.path));
     }
   }
 
-  _postRequest(Map<String, TextEditingController> controller) async {
+  _postRequest(Map<String, TextEditingController> controller, List<File>? fileList) async {
     await dotenv.load();
     String? url = dotenv.env['HOST'];
     String? port = dotenv.env['PORT'];
@@ -40,15 +42,20 @@ class _NewPostPageState extends State<NewPostPage> {
       'githuburl': controller['githuburl'] != null ? controller['githuburl']!.text : "",
       'description': controller['description'] != null ? controller['description']!.text : "",
     };
-    http.Response response = await http.post(
-      Uri.parse('http://$url:$port/user/register'),
-      headers: <String, String> {
-        'Content-Type': 'application/json',
-      },
-      body: json.encode(data),
-      encoding: Encoding.getByName("utf-8"),
-    ).timeout(const Duration(seconds: 5), onTimeout: () { return http.Response('Error', 408); });
-    return response;
+    http.MultipartRequest request = http.MultipartRequest('POST', Uri.parse('http://$url:$port/post/create'));
+    request.headers.addAll(<String, String> {
+      'Content-Type': 'application/json',
+    });
+    request.fields.addAll(data);
+    for(File v in (_imageFileList ?? [])) {
+      request.files.add(http.MultipartFile.fromBytes('file', List<int>.from(await File.fromUri(Uri.parse(v.path)).readAsBytes()), contentType: MediaType('image', v.path.split('.').last)));
+    }
+    request.send().then((response) async {
+      if (response.statusCode >= 200 && response.statusCode < 300) {
+        return json.decode(await response.stream.bytesToString());
+      }
+    }).onError((error, stackTrace) {return {'msg': 'error'};});
+    return {'msg': 'error'};
   }
   _checkinput() {
     String checkurl = widget.newPostController['githuburl']?.text ?? '';
@@ -199,8 +206,15 @@ class _NewPostPageState extends State<NewPostPage> {
                       }
                     }, icon: const Icon(Icons.clear), splashColor: Colors.black12, splashRadius: 24,),
                     const Text("프로젝트 등록하기", style: const TextStyle(fontSize: 16),),
-                    TextButton(onPressed: () {
+                    TextButton(onPressed: () async {
                       _checkinput();
+                      if(widget.newPostController['githuburlError']?.text == '0') {
+                        Map<String, dynamic> response = await _postRequest(widget.newPostController, _imageFileList);
+                        print(12);
+                      }
+                      else {
+                        print(1);
+                      }
                     }, style: ButtonStyle(
                       overlayColor: MaterialStateProperty.all(Colors.black12),
                     ),
@@ -254,7 +268,7 @@ class _NewPostPageState extends State<NewPostPage> {
                                     )
                                   ),
                                 ),
-                                for(XFile image in (_imageFileList ?? [])) Padding(
+                                for(File image in (_imageFileList ?? [])) Padding(
                                   padding: EdgeInsets.only(left: 4),
                                   child: SizedBox(
                                     height: MediaQuery.of(context).size.height * 0.12 < 160 ? MediaQuery.of(context).size.height * 0.12 : 160,
@@ -267,7 +281,7 @@ class _NewPostPageState extends State<NewPostPage> {
                                             aspectRatio: 1,
                                             child: FittedBox(
                                               fit: BoxFit.fill,
-                                              child: Image.file(File(image.path))
+                                              child: Image.file(image)
                                             ),
                                           ),
                                           IconButton(
@@ -277,7 +291,7 @@ class _NewPostPageState extends State<NewPostPage> {
                                             splashColor: Colors.transparent,
                                             onPressed: () {
                                               setState(() {
-                                                _imageFileList?.removeWhere((element) => element.name == image.name);
+                                                _imageFileList?.removeWhere((element) => element.hashCode == image.hashCode);
                                               });
                                             },
                                             padding: EdgeInsets.all(4),
@@ -309,6 +323,7 @@ class _NewPostPageState extends State<NewPostPage> {
                         TextFormField(
                           controller: widget.newPostController['githuburl'],
                           cursorColor: Colors.black,
+                          inputFormatters: [FilteringTextInputFormatter.allow(RegExp("[0-9a-zA-Z&\$+.,/:;=?@#]"))],
                           decoration: const InputDecoration(
                             border: InputBorder.none,
                             focusedBorder: InputBorder.none,
@@ -323,17 +338,20 @@ class _NewPostPageState extends State<NewPostPage> {
                           child: Text('올바른 Github 프로젝트 링크를 입력해주세요.', style: const TextStyle(fontSize: 14, color: Colors.red)), 
                         ),
                         const Divider(thickness: 1,),
-                        TextFormField(
-                          controller: widget.newPostController['description'],
-                          maxLines: null,
-                          cursorColor: Colors.black,
-                          decoration: const InputDecoration(
-                            border: InputBorder.none,
-                            focusedBorder: InputBorder.none,
-                            enabledBorder: InputBorder.none,
-                            errorBorder: InputBorder.none,
-                            disabledBorder: InputBorder.none,
-                            hintText: "설명"
+                        ConstrainedBox(
+                          constraints: BoxConstraints(minHeight: 192),
+                          child: TextFormField(
+                            controller: widget.newPostController['description'],
+                            maxLines: null,
+                            cursorColor: Colors.black,
+                            decoration: const InputDecoration(
+                              border: InputBorder.none,
+                              focusedBorder: InputBorder.none,
+                              enabledBorder: InputBorder.none,
+                              errorBorder: InputBorder.none,
+                              disabledBorder: InputBorder.none,
+                              hintText: "설명"
+                            ),
                           ),
                         ),
                       ],
