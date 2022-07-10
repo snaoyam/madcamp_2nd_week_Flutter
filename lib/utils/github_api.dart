@@ -49,7 +49,7 @@ class GithubApi {
           headers: <String, String> { 'Content-Type': 'application/json', 'Authorization': 'token $_githubToken',}, 
         ).timeout(const Duration(seconds: 5), onTimeout: () { return http.Response('Error', 408); }); //!
         if(response.statusCode >= 200 && response.statusCode < 300) {
-          return {'name': title == '' ? json.decode(response.body)['name'] : title, 'description': description == '' ? json.decode(response.body)['description'] : description};
+          return {'name': title == '' ? (json.decode(response.body)['name'] ?? '') : title, 'description': description == '' ? (json.decode(response.body)['description'] ?? '') : description};
         }
         else {
           return {'name': title, 'description': description};

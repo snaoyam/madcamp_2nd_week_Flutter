@@ -100,7 +100,7 @@ class _LoginEmailPageState extends State<LoginEmailPage> {
                   style: ElevatedButton.styleFrom(
                     minimumSize: const Size.fromHeight(40),
                   ),
-                  child: const Text("로그인", style: TextStyle(fontSize: 16)),
+                  child: const Text("로그인", style: TextStyle(color: Color.fromARGB(255, 66, 66, 66))),
                 ),
                 const SizedBox(height: 2,),
                 Align(

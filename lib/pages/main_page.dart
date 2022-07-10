@@ -1,10 +1,12 @@
 import 'package:cs496_2nd_week/pages/main_home.dart';
 import 'package:cs496_2nd_week/pages/main_my_info.dart';
+import 'package:cs496_2nd_week/pages/new_post_page.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter/src/foundation/key.dart';
 import 'package:flutter/src/widgets/framework.dart';
+import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
 import 'dart:developer';
 
 class MainPage extends StatefulWidget {
@@ -19,6 +21,23 @@ class _MainPageState extends State<MainPage> {
 
   var _currentIndex = 0;
 
+  Widget? _bottomButtons() {
+    return _currentIndex == 0 ? FloatingActionButton(
+      shape: const StadiumBorder(),
+      onPressed: () => showCupertinoModalBottomSheet(
+        expand: true,
+        context: context,
+        backgroundColor: Colors.transparent,
+        builder: (context) => NewPostPage(),
+      ),
+      backgroundColor: Colors.green,
+      child: const Icon(
+        Icons.add,
+        size: 32.0,
+      )
+    ) : null;
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -26,6 +45,7 @@ class _MainPageState extends State<MainPage> {
         systemOverlayStyle: const SystemUiOverlayStyle(statusBarBrightness: Brightness.light),
         //backgroundColor: Color.fromRGBO(107, 203, 110, 1),
         elevation: 0,
+        automaticallyImplyLeading: false,
         title: IndexedStack(
           index: _currentIndex,
           children: <Widget>[
@@ -42,6 +62,7 @@ class _MainPageState extends State<MainPage> {
           MainHome(), Container(), Container(), MyinfoPage(),
         ],
       ),
+      floatingActionButton: _bottomButtons(),
       bottomNavigationBar: BottomNavigationBar(
         type: BottomNavigationBarType.fixed,
         selectedItemColor: Colors.green,

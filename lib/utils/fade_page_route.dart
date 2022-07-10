@@ -9,7 +9,7 @@ class FadePageRoute<T> extends PageRoute<T> {
   String? get barrierLabel => null;
 
   final Widget child;
-
+  
   @override
   Widget buildPage(BuildContext context, Animation<double> animation,
       Animation<double> secondaryAnimation) {

@@ -201,7 +201,7 @@ class _SignupPageState extends State<SignupPage> {
                         Navigator.pushReplacement(context, FadePageRoute(MainPage(token: token)));
                       }
                       else {
-                        print('wrong id or password');
+                        print('failed to register');
                       }
                     }
                   },

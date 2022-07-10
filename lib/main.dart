@@ -19,7 +19,6 @@ class MainApp extends StatelessWidget { // st stl stf
         colorScheme:  Theme.of(context).colorScheme.copyWith(
           primary: Color(0xFFADCB00),
           secondary: Colors.amber,
-          primaryContainer: Colors.black,
         )
       ),
       home: const StartLoadingPage(),
