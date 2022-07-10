@@ -6,12 +6,16 @@ import 'package:flutter_dotenv/flutter_dotenv.dart';
 class GithubApi {
   
   Map<String, String?> parse(String url) {
-    Uri url_parse = Uri.parse(url);
-    List<String> url_list = url_parse.path.split('/');
-    if(url_parse.host.split('.').reversed.elementAt(1) == 'github') {
+    String checkurl = url;
+    if(!checkurl.startsWith('http')) {
+      checkurl = 'https://' + checkurl;
+    }
+    Uri urlParse = Uri.parse(checkurl);
+    List<String> url_list = urlParse.path.split('/');
+    if(url_list.length > 2 && urlParse.host.endsWith('github.com')) {
       return {'username': url_list.elementAt(1), 'repository': url_list.elementAt(2)};
     }
-    else return {'username': null, 'repository': null};
+    else return {'username': '', 'repository': ''};
   }
 
   contributors(String url) async {

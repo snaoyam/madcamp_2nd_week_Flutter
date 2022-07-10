@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:io';
 
 import 'package:cs496_2nd_week/widgets/imagepicker.dart';
 import 'package:flutter/cupertino.dart';
@@ -7,6 +8,8 @@ import 'package:flutter/src/foundation/key.dart';
 import 'package:flutter/src/widgets/framework.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
+import 'package:image_picker/image_picker.dart';
+import 'package:dotted_border/dotted_border.dart';
 import 'package:http/http.dart' as http;
 
 class NewPostPage extends StatefulWidget {
@@ -18,6 +21,14 @@ class NewPostPage extends StatefulWidget {
 }
 
 class _NewPostPageState extends State<NewPostPage> {
+  
+  List<XFile>? _imageFileList = [];
+
+  void _addImageFile(XFile? value) {
+    if(value != null) {
+      _imageFileList = (_imageFileList ?? [])..add(value);
+    }
+  }
 
   _postRequest(Map<String, TextEditingController> controller) async {
     await dotenv.load();
@@ -39,7 +50,103 @@ class _NewPostPageState extends State<NewPostPage> {
     ).timeout(const Duration(seconds: 5), onTimeout: () { return http.Response('Error', 408); });
     return response;
   }
-  
+  _checkinput() {
+    String checkurl = widget.newPostController['githuburl']?.text ?? '';
+    if(!checkurl.startsWith('http')) {
+      checkurl = 'https://' + checkurl;
+    }
+    Uri urlParse = Uri.parse(checkurl);
+    setState(() {
+      if(urlParse.host.endsWith('github.com')) {
+        widget.newPostController['githuburlError']?.text = '0';
+      }
+      else {
+        widget.newPostController['githuburlError']?.text = '1';
+      }
+    });
+  }
+
+
+  Future _pickImageCamera() async {
+    try {
+      final XFile? cameraImage = await ImagePicker().pickImage(source: ImageSource.camera);
+      setState(() {
+        _addImageFile(cameraImage);
+      });
+      return;
+    } on Exception catch (e) {
+      print(e);
+      return;
+    }
+  }
+
+  Future _pickImageGallery() async {
+    try {
+      final List<XFile>? pickedFileList = await ImagePicker().pickMultiImage(
+        maxWidth: 4096,
+        maxHeight: 4096,
+      );
+      setState(() {
+        for(XFile image in (pickedFileList ?? [])) {
+          _addImageFile(image);
+        }
+      });
+      print(_imageFileList);
+    } on Exception catch (e) {
+      print(e);
+    }
+    return;
+  }
+
+  Widget bottomSheet() {
+    return Container(
+      height: 100,
+      width: MediaQuery.of(context).size.width,
+      margin: const EdgeInsets.symmetric(
+        horizontal: 20,
+        vertical: 20,
+      ),
+      child: Column(
+        children: [
+          const Text(
+            "프로젝트 홍보용 사진을 선택하세요",
+            style: TextStyle(fontSize: 20),
+          ),
+          const SizedBox(
+            height: 20,
+          ),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              TextButton.icon(
+                style: TextButton.styleFrom(
+                  primary: Colors.black54,
+                ),
+                icon: Icon(Icons.camera),
+                onPressed: () {
+                  Navigator.pop(context, 'OK');
+                  _pickImageCamera();
+                },
+                label: Text("카메라"),
+              ),
+              SizedBox(width: 16,),
+              TextButton.icon(
+                style: TextButton.styleFrom(
+                  primary: Colors.black54,
+                ),
+                icon: Icon(Icons.image),
+                onPressed: () {
+                  Navigator.pop(context, 'OK');
+                  _pickImageGallery();
+                },
+                label: Text("갤러리"),
+              ),
+            ],
+          )
+        ],
+      ),
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -64,7 +171,8 @@ class _NewPostPageState extends State<NewPostPage> {
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     IconButton(onPressed: () {
-                      if(widget.newPostController.values.every((element) => element.text == '')) {
+                      if(widget.newPostController['title']?.text == '' && widget.newPostController['githuburl']?.text == '' && widget.newPostController['description']?.text == '') {
+                        widget.newPostController['githuburlError']?.text = '0';
                         Navigator.of(context).pop();
                       }
                       else {
@@ -81,6 +189,7 @@ class _NewPostPageState extends State<NewPostPage> {
                                 Navigator.pop(context, 'OK');
                                 widget.newPostController['title']?.text = '';
                                 widget.newPostController['githuburl']?.text = '';
+                                widget.newPostController['githuburlError']?.text = '0';
                                 widget.newPostController['description']?.text = '';
                                 Navigator.of(context).pop();
                               },
@@ -92,7 +201,7 @@ class _NewPostPageState extends State<NewPostPage> {
                     }, icon: const Icon(Icons.clear), splashColor: Colors.black12, splashRadius: 24,),
                     const Text("프로젝트 등록하기", style: const TextStyle(fontSize: 16),),
                     TextButton(onPressed: () {
-
+                      _checkinput();
                     }, style: ButtonStyle(
                       overlayColor: MaterialStateProperty.all(Colors.black12),
                     ),
@@ -114,10 +223,53 @@ class _NewPostPageState extends State<NewPostPage> {
                     child: Column(
                       children: [
                         const Divider(thickness: 1, color: Colors.transparent,),
-                        SizedBox(
-                          height: MediaQuery.of(context).size.height * 0.15 < 160 ? MediaQuery.of(context).size.height * 0.15 : 160,
-                          child: Container(
-                            color: Colors.amber,
+                        Align(alignment: Alignment.centerLeft, child: Text("사진 추가", style: TextStyle(fontSize: 16, color: Colors.black54),)),
+                        SizedBox(height: 4,),
+                        SingleChildScrollView(
+                          scrollDirection: Axis.horizontal,
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.start,
+                            children: [
+                              GestureDetector(
+                                onTap: () {
+                                  showModalBottomSheet(
+                                      context: context,
+                                      builder: (builder) => bottomSheet());
+                                },
+                                child: SizedBox(
+                                  height: MediaQuery.of(context).size.height * 0.12 < 160 ? MediaQuery.of(context).size.height * 0.12 : 160,
+                                  child: AspectRatio(aspectRatio: 1, 
+                                    child: DottedBorder(
+                                      borderType: BorderType.RRect,
+                                      radius: Radius.circular(6),
+                                      padding: EdgeInsets.all(4),
+                                      dashPattern: [8, 6],
+                                      color: Colors.black54,
+                                      strokeWidth: 1,
+                                      child: const Center(
+                                        child: Icon(Icons.add, size: 40,),
+                                      )
+                                    ),
+                                  )
+                                ),
+                              ),
+                              for(XFile image in (_imageFileList ?? [])) Padding(
+                                padding: EdgeInsets.only(left: 4),
+                                child: SizedBox(
+                                  height: MediaQuery.of(context).size.height * 0.12 < 160 ? MediaQuery.of(context).size.height * 0.12 : 160,
+                                  child: ClipRRect(
+                                    borderRadius: BorderRadius.circular(4),
+                                    child: AspectRatio(
+                                      aspectRatio: 1,
+                                      child: FittedBox(
+                                        fit: BoxFit.fill,
+                                        child: Image.file(File(image.path))
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                              ),
+                            ],
                           ),
                         ),
                         const Divider(thickness: 1,),
@@ -145,6 +297,10 @@ class _NewPostPageState extends State<NewPostPage> {
                             disabledBorder: InputBorder.none,
                             hintText: "Github 링크 \*"
                           ),
+                        ),
+                        if((widget.newPostController['githuburlError']?.text ?? '0') != '0') const Align(
+                          alignment: Alignment.centerLeft,
+                          child: Text('올바른 Github 프로젝트 링크를 입력해주세요.', style: const TextStyle(fontSize: 14, color: Colors.red)), 
                         ),
                         const Divider(thickness: 1,),
                         TextFormField(

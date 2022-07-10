@@ -46,6 +46,7 @@ dependencies:
   video_player: ^2.4.5
   flutter_markdown: ^0.6.10+2
   image_picker: ^0.8.5+3
+  dotted_border: ^2.0.0+2
 
 
 dev_dependencies:

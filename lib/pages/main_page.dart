@@ -21,9 +21,9 @@ class _MainPageState extends State<MainPage> {
 
   var _currentIndex = 0;
   Map<String, TextEditingController> newPostController = {
-    'name': TextEditingController(),
-    'url': TextEditingController(),
-    'urlError': TextEditingController(),
+    'title': TextEditingController(),
+    'githuburl': TextEditingController(),
+    'githuburlError': TextEditingController(text: '0'),
     'description': TextEditingController(),
   };
 
