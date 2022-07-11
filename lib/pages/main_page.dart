@@ -1,4 +1,5 @@
-import 'package:cs496_2nd_week/pages/my_info.dart';
+import 'package:cs496_2nd_week/pages/main_home.dart';
+import 'package:cs496_2nd_week/pages/main_my_info.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -23,25 +24,30 @@ class _MainPageState extends State<MainPage> {
     return Scaffold(
       appBar: AppBar(
         systemOverlayStyle: const SystemUiOverlayStyle(statusBarBrightness: Brightness.light),
-        leading: IconButton(
-          icon: const Icon(Icons.arrow_back_ios, color: Colors.black,),
-          onPressed: () => Navigator.of(context).pop(),
-        ),
-        backgroundColor: Colors.transparent,
+        //backgroundColor: Color.fromRGBO(107, 203, 110, 1),
         elevation: 0,
+        title: IndexedStack(
+          index: _currentIndex,
+          children: <Widget>[
+            Align(alignment: Alignment.center,child: Text('Home')),
+            Align(alignment: Alignment.center,child: Text('Top Projects')),
+            Align(alignment: Alignment.center,child: Text('Achievements')),
+            Align(alignment: Alignment.center,child: Text('My Info')),
+          ],
+        ),
       ),
       body: IndexedStack(
         index: _currentIndex,
         children: <Widget>[
-          Container(), Container(), Container(), MyinfoPage(),
+          MainHome(), Container(), Container(), MyinfoPage(),
         ],
       ),
       bottomNavigationBar: BottomNavigationBar(
         type: BottomNavigationBarType.fixed,
-        selectedItemColor: Colors.purple,
-        unselectedItemColor: Colors.black,
-        selectedIconTheme: const IconThemeData(color: Colors.purple),
-        unselectedIconTheme: const IconThemeData(color: Colors.black),
+        selectedItemColor: Colors.green,
+        //unselectedItemColor: Colors.black,
+        selectedIconTheme: const IconThemeData(color: Colors.green),
+        //unselectedIconTheme: const IconThemeData(color: Colors.black),
         currentIndex: _currentIndex,
         onTap: (index) {
           setState(() {

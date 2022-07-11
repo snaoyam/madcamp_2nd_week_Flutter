@@ -43,6 +43,7 @@ class _SignupPageState extends State<SignupPage> {
 
 
   _postRequest(Map<String, TextEditingController> controller) async {
+    await dotenv.load();
     String? url = dotenv.env['HOST'];
     String? port = dotenv.env['PORT'];
     if(url == null) { print("_postRequest"); return; }

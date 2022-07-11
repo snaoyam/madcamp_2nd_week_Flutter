@@ -1,8 +1,4 @@
 import 'package:cs496_2nd_week/pages/start_loading_page.dart';
-import 'package:cs496_2nd_week/pages/login_page.dart';
-import 'package:cs496_2nd_week/pages/main_page.dart';
-import 'package:cs496_2nd_week/pages/signup_page.dart';
-import 'package:cs496_2nd_week/pages/my_info.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:flutter/material.dart';
 
@@ -20,11 +16,11 @@ class MainApp extends StatelessWidget { // st stl stf
       debugShowCheckedModeBanner: false,
       title: "cs496 2nd week",
       theme: ThemeData(
-          colorScheme:  Theme.of(context).colorScheme.copyWith(
-            primary: Colors.purple,
-            secondary: Colors.purple,
-            primaryContainer: Colors.black,
-          )
+        colorScheme:  Theme.of(context).colorScheme.copyWith(
+          primary: Color(0xFFADCB00),
+          secondary: Colors.amber,
+          primaryContainer: Colors.black,
+        )
       ),
       home: const StartLoadingPage(),
       /*initialRoute: '/login',

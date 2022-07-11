@@ -2,7 +2,6 @@ import 'dart:convert';
 import 'package:cs496_2nd_week/pages/main_page.dart';
 import 'package:cs496_2nd_week/pages/signup_page.dart';
 import 'package:cs496_2nd_week/utils/fade_page_route.dart';
-import 'package:cs496_2nd_week/widgets/base_app_bar.dart';
 import 'package:cs496_2nd_week/widgets/c_text_input.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/gestures.dart';
@@ -27,6 +26,7 @@ class _LoginEmailPageState extends State<LoginEmailPage> {
   TextEditingController passController = TextEditingController();
 
   _postRequest(String username, String password) async {
+    await dotenv.load();
     String? url = dotenv.env['HOST'];
     String? port = dotenv.env['PORT'];
     if(url == null) { print("_postRequest"); return; }
