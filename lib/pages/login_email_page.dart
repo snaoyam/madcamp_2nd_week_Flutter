@@ -61,61 +61,66 @@ class _LoginEmailPageState extends State<LoginEmailPage> {
       body: Center(
         child: SingleChildScrollView(
           scrollDirection: Axis.vertical,
-          child: ConstrainedBox(
-            constraints: BoxConstraints(
-              maxWidth: MediaQuery.of(context).size.width * 0.8 < 500 ? MediaQuery.of(context).size.width * 0.8 : 500,
-            ),
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                SizedBox(height: 16,),
-                CTextInput(
-                  title: '아이디 또는 이메일',
-                  placeholder: 'username or email address',
-                  controller: idController,
+          child: FractionallySizedBox(
+            widthFactor: 1,
+            child: Center(
+              child: ConstrainedBox(
+                constraints: BoxConstraints(
+                  maxWidth: MediaQuery.of(context).size.width * 0.8 < 500 ? MediaQuery.of(context).size.width * 0.8 : 500,
                 ),
-                CTextInput(
-                  title: '비밀번호',
-                  placeholder: 'Password',
-                  obscureText: true,
-                  controller: passController,
-                ),
-                OutlinedButton(
-                  onPressed: () async {
-                    if(idController.text.toString() != '' && passController.text.toString() != '') {
-                      http.Response response = await _postRequest(idController.text, passController.text);
-                      if(response.statusCode >= 200 && response.statusCode < 300) {
-                        print(jsonDecode(response.body)['token']);
-                        await storage.write(
-                          key: 'token',
-                          value: jsonDecode(response.body)['token'],
-                        ); //storage.delete(key: "login");
-                        Navigator.pushReplacement(context, FadePageRoute(MainPage(token: '${idController.text}.${passController.text}')));
-                      }
-                      else {
-                        print('wrong id or password');
-                      }
-                    }
-                  },
-                  style: ElevatedButton.styleFrom(
-                    minimumSize: const Size.fromHeight(40),
-                  ),
-                  child: const Text("로그인", style: TextStyle(fontSize: 16)),
-                ),
-                const SizedBox(height: 2,),
-                Align(
-                  alignment: Alignment.centerRight,
-                  child: RichText(
-                    text: TextSpan(
-                      text: 'Register as New Email User', 
-                      style: const TextStyle(color: Color.fromARGB(255, 66, 66, 66), decoration: TextDecoration.underline), 
-                      recognizer: TapGestureRecognizer()..onTap = () {
-                        Navigator.push(context, MaterialPageRoute(builder: (context) => const SignupPage()),);
-                      },
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    SizedBox(height: 16,),
+                    CTextInput(
+                      title: '아이디 또는 이메일',
+                      placeholder: 'username or email address',
+                      controller: idController,
                     ),
-                  ),
+                    CTextInput(
+                      title: '비밀번호',
+                      placeholder: 'Password',
+                      obscureText: true,
+                      controller: passController,
+                    ),
+                    OutlinedButton(
+                      onPressed: () async {
+                        if(idController.text.toString() != '' && passController.text.toString() != '') {
+                          http.Response response = await _postRequest(idController.text, passController.text);
+                          if(response.statusCode >= 200 && response.statusCode < 300) {
+                            print(jsonDecode(response.body)['token']);
+                            await storage.write(
+                              key: 'token',
+                              value: jsonDecode(response.body)['token'],
+                            ); //storage.delete(key: "login");
+                            Navigator.pushReplacement(context, FadePageRoute(MainPage(token: '${idController.text}.${passController.text}')));
+                          }
+                          else {
+                            print('wrong id or password');
+                          }
+                        }
+                      },
+                      style: ElevatedButton.styleFrom(
+                        minimumSize: const Size.fromHeight(40),
+                      ),
+                      child: const Text("로그인", style: TextStyle(color: Color.fromARGB(255, 66, 66, 66))),
+                    ),
+                    const SizedBox(height: 2,),
+                    Align(
+                      alignment: Alignment.centerRight,
+                      child: RichText(
+                        text: TextSpan(
+                          text: 'Register as New Email User', 
+                          style: const TextStyle(color: Color.fromARGB(255, 66, 66, 66), decoration: TextDecoration.underline), 
+                          recognizer: TapGestureRecognizer()..onTap = () {
+                            Navigator.push(context, MaterialPageRoute(builder: (context) => const SignupPage()),);
+                          },
+                        ),
+                      ),
+                    ),
+                  ],
                 ),
-              ],
+              ),
             ),
           ),
         ),
