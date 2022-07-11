@@ -45,7 +45,7 @@ class _StartLoadingPageState extends State<StartLoadingPage> {
           Navigator.pushReplacement(context, FadePageRoute(MainPage(token: token)));
         }
         else {
-          Navigator.pushReplacement(context, FadePageRoute(const LoginPage()));
+          Navigator.pushReplacement(context, FadePageRoute(LoginPage()));
         } 
       }
       return;

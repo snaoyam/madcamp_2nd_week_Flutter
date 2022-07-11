@@ -5,9 +5,11 @@ import 'package:cs496_2nd_week/pages/signup_page.dart';
 import 'package:cs496_2nd_week/pages/my_info.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:flutter/material.dart';
+import 'package:kakao_flutter_sdk_user/kakao_flutter_sdk_user.dart';
 
 void main() async {
   await dotenv.load(fileName: '.env');
+  KakaoSdk.init(nativeAppKey: '9605435e2388fdc026ed845e3772ecca');
   runApp(const MainApp());
 }
 

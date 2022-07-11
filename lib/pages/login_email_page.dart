@@ -90,7 +90,7 @@ class _LoginEmailPageState extends State<LoginEmailPage> {
                           key: 'token',
                           value: jsonDecode(response.body)['token'],
                         ); //storage.delete(key: "login");
-                        Navigator.pushReplacement(context, FadePageRoute(MainPage(token: '${idController.text}.${passController.text}')));
+                        Navigator.pushReplacement(context, FadePageRoute(MainPage(token: jsonDecode(response.body)['token'])));
                       }
                       else {
                         print('wrong id or password');
