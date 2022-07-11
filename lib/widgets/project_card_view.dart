@@ -83,7 +83,7 @@ class _ProjectCardViewState extends State<ProjectCardView> {
                                       overflow: TextOverflow.clip,
                                     ),
                                   ),
-                                ) ),
+                                )),
                               ],
                             ),
                           ),

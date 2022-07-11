@@ -6,7 +6,7 @@ import 'package:flutter/src/foundation/key.dart';
 import 'package:flutter/src/widgets/framework.dart';
 
 class MainHome extends StatefulWidget {
-  const MainHome({Key? key}) : super(key: key);
+  MainHome({Key? key}) : super(key: key);
 
   @override
   State<MainHome> createState() => _MainHomeState();
@@ -21,7 +21,7 @@ class _MainHomeState extends State<MainHome> {
         children: [
           GestureDetector(
             onTap: () {
-              Navigator.push(context, MaterialPageRoute(builder: (context) => const ViewPostPage(githuburl: 'https://github.com/snaoyam/madcamp_1st_week', title: 'Madcamp 1st Week', description: 'KKAMITORY is the webpage which contains everything you need in your dormitory.KKAMITORY is the webpage which contains everything you need in your dormitory.KKAMITORY is the webpage which contains everything you need in your dormitory.KKAMITORY is the webpage which contains everything you need in your dormitory. It has Posts page for dormitory community, Reserve page for reservation of dormitory machines, and Report page for a quick report to dormitory teacher.', imageurl: 'https://user-images.githubusercontent.com/68638211/126341027-2bdb5518-bcd4-4325-b034-52fde6ef7ec6.png',)),);
+              Navigator.push(context, MaterialPageRoute(builder: (context) => ViewPostPage(githuburl: 'https://github.com/snaoyam/madcamp_1st_week', title: 'Madcamp 1st Week', description: 'KKAMITORY is the webpage which contains everything you need in your dormitory.KKAMITORY is the webpage which contains everything you need in your dormitory.KKAMITORY is the webpage which contains everything you need in your dormitory.KKAMITORY is the webpage which contains everything you need in your dormitory. It has Posts page for dormitory community, Reserve page for reservation of dormitory machines, and Report page for a quick report to dormitory teacher.', imageurl: ['https://user-images.githubusercontent.com/68638211/126341027-2bdb5518-bcd4-4325-b034-52fde6ef7ec6.png'],)),);
             },
             child: ProjectCardView(githuburl: 'https://github.com/snaoyam/madcamp_1st_week', title: 'Madcamp 1st Week', description: 'KKAMITORY is the webpage which contains everything you need in your dormitory.KKAMITORY is the webpage which contains everything you need in your dormitory.KKAMITORY is the webpage which contains everything you need in your dormitory.KKAMITORY is the webpage which contains everything you need in your dormitory. It has Posts page for dormitory community, Reserve page for reservation of dormitory machines, and Report page for a quick report to dormitory teacher.', imageurl: 'https://user-images.githubusercontent.com/68638211/126341027-2bdb5518-bcd4-4325-b034-52fde6ef7ec6.png',)
           ),
