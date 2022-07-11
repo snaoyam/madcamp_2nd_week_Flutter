@@ -16,7 +16,10 @@ Future<String> _getTextData(String githuburl) async{
     Uri.parse(url),
     headers: <String, String> { 'Content-Type': 'application/json', 'Authorization': 'token $_githubToken',}, 
   ).timeout(const Duration(seconds: 5), onTimeout: () { return http.Response('Error', 408); });
-  return response.body;
+  String urlprefix = url.split('/').sublist(0, 6).join('/');
+  return response.body.toString().replaceAllMapped(RegExp('<img[^>]+src="([^">]+)[^>]+>'), (match) {
+    return '![img]($urlprefix/${match.group(1)})';
+  });//  ('<img src="', '![img](');
 }
 
 class MarkdownRender extends StatelessWidget {
@@ -26,8 +29,8 @@ class MarkdownRender extends StatelessWidget {
   Widget build(BuildContext context) {
     return FutureBuilder(
       future: _getTextData(githuburl),
-      builder: (context, snapshot){
-        if(snapshot.connectionState == ConnectionState.done) {
+      builder: (context, snapshot) {
+        if(snapshot.hasData) {
           return Markdown(
             data: snapshot.data.toString(),
             shrinkWrap: true,
