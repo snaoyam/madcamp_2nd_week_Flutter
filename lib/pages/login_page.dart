@@ -47,8 +47,8 @@ class _LoginPageState extends State<LoginPage> {
                     onPressed: () async {
                       await widget.viewModel.login();
                       setState((){});
-                      print("email is ${widget.viewModel.user?.kakaoAccount?.email}");
-                      Navigator.pushReplacement(context, FadePageRoute(MainPage(token: widget.viewModel.user?.kakaoAccount?.email)));
+                      if(widget.viewModel.user?.kakaoAccount?.email != null)
+                        Navigator.pushReplacement(context, FadePageRoute(MainPage(token: widget.viewModel.user?.kakaoAccount?.email)));
                     },
                     style: ElevatedButton.styleFrom(
                         minimumSize: const Size.fromHeight(40)
@@ -56,7 +56,8 @@ class _LoginPageState extends State<LoginPage> {
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
-                        Image.asset('assets/images/login_googleIcon.png', width: 20, height: 20, ),
+                        // Image.asset('assets/images/login_googleIcon.png', width: 20, height: 20, ),
+                        Image.asset('assets/images/kakaotalk.png',width:20, height: 20,),
                         const SizedBox(width: 8),
                         const Text('Continue with Kakao', style: TextStyle(color: Color.fromARGB(255, 66, 66, 66)), )
                       ],
