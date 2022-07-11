@@ -2,7 +2,7 @@ import 'package:cs496_2nd_week/widgets/github_author_chip.dart';
 import 'package:cs496_2nd_week/widgets/markdown_render.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:http/http.dart' as http;
+
 
 class ViewPostPage extends StatefulWidget {
   ViewPostPage({Key? key, this.description = '', required this.imageurl, this.name = '', required this.githuburl, this.authorchip = const []}) : super(key: key);
@@ -11,7 +11,7 @@ class ViewPostPage extends StatefulWidget {
   String description;
   final String githuburl;
   List<dynamic> authorchip;
-
+  
   
   @override
   State<ViewPostPage> createState() => _ViewPostPageState();

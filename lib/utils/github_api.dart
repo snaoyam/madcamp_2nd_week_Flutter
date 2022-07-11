@@ -53,10 +53,7 @@ class GithubApi {
           Uri.parse('https://api.github.com/repos/$_username/$_repository'),
           headers: <String, String> { 'Content-Type': 'application/json', 'Authorization': 'token $_githubToken',}, 
         ).timeout(const Duration(seconds: 5), onTimeout: () { return http.Response('Error', 408); }); //!
-        print(response.statusCode);
         if(response.statusCode >= 200 && response.statusCode < 300) {
-          //print(name);
-          print({'name': name == '' ? (json.decode(response.body)['name'] ?? '') : name, 'description': description == '' ? (json.decode(response.body)['description'] ?? '') : description});
           return {'name': name == '' ? (json.decode(response.body)['name'] ?? '') : name, 'description': description == '' ? (json.decode(response.body)['description'] ?? '') : description};
         }
         else {

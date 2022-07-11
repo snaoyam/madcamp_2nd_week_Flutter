@@ -16,7 +16,7 @@ class StartLoadingPage extends StatefulWidget {
 }
 
 class _StartLoadingPageState extends State<StartLoadingPage> {
-  static const storage = FlutterSecureStorage();
+  final storage = FlutterSecureStorage();
   @override
   void initState() {
     super.initState();

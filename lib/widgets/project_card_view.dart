@@ -18,6 +18,18 @@ class ProjectCardView extends StatefulWidget {
 }
 
 class _ProjectCardViewState extends State<ProjectCardView> {
+
+  @override
+  void initState() {
+    Map<String, dynamic> contributors = GithubApi().contributors(widget.githuburl);
+    super.initState();
+  }
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    //precacheImage(image1.image, context); 
+  }
   @override
   Widget build(BuildContext context) {
     return AspectRatio(
