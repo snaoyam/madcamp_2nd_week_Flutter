@@ -1,37 +1,74 @@
-const mongoose = require("mongoose");
+const { Schema, model } = require("mongoose")
+const bcrypt = require('bcrypt')
+const jwt = require('jsonwebtoken')
 
-const Schema = mongoose.Schema;
 
-const User = Schema({
-    username:{
+const UserSchema = Schema({
+    username: {
         type : String,
         required: true,
-        unique: true
+        unique: true,
     },
-    password:{
+    name: {
         type: String,
-        required: true
+        required: true,
     },
-
-    email:{
+    password: {
         type: String,
-        required: true
+        required: true,
     },
-
-    projects:{
-        type: Number,
-        default: 0
+    email: {
+        type: String,
+        required: true,
+        unique: true,
     },
-
-    views:{
-        type: Number,
-        default: 0
+    year: {
+        type: String,
+        required: true,
     },
-
-    recommends:{
-        type: Number,
-        default: 0
+    class: {
+        type: String,
+        required: true,
     },
-});
+    posts:{
+        type: [Schema.ObjectId],
+        default: []
+    },
+})
 
-module.exports = mongoose.model("User", User);
+UserSchema.pre('save', async function (next) {
+    const user = this
+    if (user.isModified('password')) {
+        const salt = await bcrypt.genSalt(10)
+        user.password = await bcrypt.hash(user.password, salt)
+    }
+    return next()
+})
+
+UserSchema.methods.comparePassword = function (passwd, callback) {
+    console.log(passwd, this.password)
+    bcrypt.compare(passwd, this.password, (err, match) => {
+        console.log(err)
+        if (err) {
+            console.error(err)
+            return callback(err, null)
+        }
+        callback(null, match)
+    })
+}
+
+UserSchema.methods.generateToken = function (callback) {
+    const user = this
+    const token = jwt.sign({ id: user._id.toHexString(), studentid: user.studentid, name: encodeURIComponent(user.name) }, process.env.jwtsecret, { expiresIn: '365d' })
+    user.token = token
+    user.save((err) => {
+        if (err) {
+            console.error(err)
+            callback(err, null)
+        }
+        else callback(null, token)
+    })
+}
+
+
+module.exports = model("User", UserSchema);

@@ -1,8 +1,8 @@
 const express = require("express");
-const Project = require("../models/projects.models");
-const middleware=require('../middleware');
+const Posts = require("../models/projects.models");
 const router = express.Router();
-const path = require("path");
+var multiparty = require('multiparty');
+
 
 //사진 불러오기
 const multer = require("multer");
