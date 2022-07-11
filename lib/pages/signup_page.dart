@@ -26,6 +26,7 @@ class _SignupPageState extends State<SignupPage> {
   static const storage = FlutterSecureStorage();
   Map<String, TextEditingController> textController = {
     'email': TextEditingController(),
+    'name': TextEditingController(),
     'username': TextEditingController(),
     'password': TextEditingController(),
     'password_check': TextEditingController(),
@@ -34,6 +35,7 @@ class _SignupPageState extends State<SignupPage> {
   };
   Map<String, int> isError = {
     'email': 0,
+    'name': 0,
     'username': 0,
     'password': 0,
     'password_check': 0,
@@ -49,13 +51,14 @@ class _SignupPageState extends State<SignupPage> {
     if(url == null) { print("_postRequest"); return; }
     Map<String, String> data = {
       'username': controller['username'] != null ? controller['username']!.text : "",
+      'name': controller['name'] != null ? controller['name']!.text : "",
       'password': controller['password'] != null ? controller['password']!.text : "",
       'email': controller['email'] != null ? controller['email']!.text : "",
       'year': controller['year'] != null ? controller['year']!.text : "",
       'class': controller['class'] != null ? controller['class']!.text : "",
     };
     http.Response response = await http.post(
-      Uri.parse('http://$url:$port/user/register'),
+      Uri.parse('http://$url:$port/public/user/register'),
       headers: <String, String> {
         'Content-Type': 'application/json',
       },

@@ -24,15 +24,15 @@ class NewPostPage extends StatefulWidget {
 
 class _NewPostPageState extends State<NewPostPage> {
   
-  List<File>? _imageFileList = [];
+  List<XFile>? _imageFileList = [];
 
-  void _addImageFile(XFile? value) async {
+  void _addImageFile(XFile? value) {
     if(value != null) {
-      _imageFileList = (_imageFileList ?? [])..add(File(value.path));
+      _imageFileList = (_imageFileList ?? [])..add(value);
     }
   }
 
-  _postRequest(Map<String, TextEditingController> controller, List<File>? fileList) async {
+  _postRequest(Map<String, TextEditingController> controller, List<XFile>? fileList) async {
     await dotenv.load();
     String? url = dotenv.env['HOST'];
     String? port = dotenv.env['PORT'];
@@ -42,13 +42,11 @@ class _NewPostPageState extends State<NewPostPage> {
       'githuburl': controller['githuburl'] != null ? controller['githuburl']!.text : "",
       'description': controller['description'] != null ? controller['description']!.text : "",
     };
-    http.MultipartRequest request = http.MultipartRequest('POST', Uri.parse('http://$url:$port/post/create'));
-    request.headers.addAll(<String, String> {
-      'Content-Type': 'application/json',
-    });
+    http.MultipartRequest request = http.MultipartRequest('POST', Uri.parse('http://$url:$port/api/post/new'));
+    request.headers.addAll(<String, String> {    });
     request.fields.addAll(data);
-    for(File v in (_imageFileList ?? [])) {
-      request.files.add(http.MultipartFile.fromBytes('file', List<int>.from(await File.fromUri(Uri.parse(v.path)).readAsBytes()), contentType: MediaType('image', v.path.split('.').last)));
+    for(XFile v in (_imageFileList ?? [])) {
+      request.files.add(await http.MultipartFile.fromPath('image', v.path, contentType: MediaType('image', v.path.split('.').last)));
     }
     request.send().then((response) async {
       if (response.statusCode >= 200 && response.statusCode < 300) {
@@ -267,7 +265,7 @@ class _NewPostPageState extends State<NewPostPage> {
                                     )
                                   ),
                                 ),
-                                for(File image in (_imageFileList ?? [])) Padding(
+                                for(XFile image in (_imageFileList ?? [])) Padding(
                                   padding: EdgeInsets.only(left: 4),
                                   child: SizedBox(
                                     height: MediaQuery.of(context).size.height * 0.12 < 160 ? MediaQuery.of(context).size.height * 0.12 : 160,
@@ -280,7 +278,7 @@ class _NewPostPageState extends State<NewPostPage> {
                                             aspectRatio: 1,
                                             child: FittedBox(
                                               fit: BoxFit.fill,
-                                              child: Image.file(image)
+                                              child: Image.file(File(image.path))
                                             ),
                                           ),
                                           IconButton(

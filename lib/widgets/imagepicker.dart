@@ -43,7 +43,7 @@ class _MyHomePageState extends State<MyHomePage> {
 
   postData2(String title, String description, String author) async {
     final response = await http.post( Uri.parse(
-        'http://localhost:5000/user/resgister'
+        'http://localhost:5000/api/resgister'
     ),
       headers: <String, String>{
         'Content-Type': 'application/json; charset=UTF-8',

@@ -7,11 +7,11 @@ import 'package:cached_network_image/cached_network_image.dart';
 
 
 class ProjectCardView extends StatefulWidget {
-  const ProjectCardView({Key? key, this.name = '', this.description = '', this.imageurl = const [], required this.githuburl}) : super(key: key);
-  final String name;
-  final String description;
-  final List<String> imageurl;
-  final String githuburl;
+  ProjectCardView({Key? key, this.name = '', this.description = '', this.imageurl = const [], required this.githuburl}) : super(key: key);
+  String name;
+  String description;
+  List<String> imageurl;
+  String githuburl;
 
   @override
   State<ProjectCardView> createState() => _ProjectCardViewState();
@@ -48,7 +48,7 @@ class _ProjectCardViewState extends State<ProjectCardView> {
                     children: [
                       FittedBox(
                         fit: BoxFit.fitWidth, 
-                        child: Text(snapshot.data?[0]['name'], style: const TextStyle(fontSize: 32, fontWeight: FontWeight.bold, height: 1.0),)
+                        child: Text(snapshot.data?[0]['name'] ?? '', style: const TextStyle(fontSize: 32, fontWeight: FontWeight.bold, height: 1.0),)
                       ),
                       Expanded(
                         child: Row(

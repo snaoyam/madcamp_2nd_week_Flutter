@@ -35,7 +35,7 @@ class _LoginEmailPageState extends State<LoginEmailPage> {
       'password': password,
     };
     http.Response response = await http.post(
-      Uri.parse('http://$url:$port/user/login'),
+      Uri.parse('http://$url:$port/public/user/login'),
       headers: <String, String> {
         'Content-Type': 'application/json',
       },
