@@ -5,10 +5,11 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'dart:async';
 import 'package:flutter_markdown/flutter_markdown.dart';
+//import 'package:markdown/markdown.dart' as md;
 import 'package:shimmer/shimmer.dart';
 import 'package:url_launcher/url_launcher.dart';
 
-Future<String> _getTextData(String githuburl) async{
+Future<List<String>> _getTextData(String githuburl) async{
   
   String url = await GithubApi().rawReadme(githuburl);
   String? _githubToken = dotenv.env['GITHUBTOKEN'];
@@ -17,9 +18,7 @@ Future<String> _getTextData(String githuburl) async{
     headers: <String, String> { 'Content-Type': 'application/json', 'Authorization': 'token $_githubToken',}, 
   ).timeout(const Duration(seconds: 5), onTimeout: () { return http.Response('Error', 408); });
   String urlprefix = url.split('/').sublist(0, 6).join('/');
-  return response.body.toString().replaceAllMapped(RegExp('<img[^>]+src="([^">]+)[^>]+>'), (match) {
-    return '![img]($urlprefix/${match.group(1)})';
-  });//  ('<img src="', '![img](');
+  return [response.body, urlprefix];//  ('<img src="', '![img](');
 }
 
 class MarkdownRender extends StatelessWidget {
@@ -32,7 +31,9 @@ class MarkdownRender extends StatelessWidget {
       builder: (context, snapshot) {
         if(snapshot.hasData) {
           return Markdown(
-            data: snapshot.data.toString(),
+            data: ((snapshot.data as List).first ?? '').replaceAllMapped(RegExp('<img[^>]+src="([^">]+)[^>]+>'), (match) {
+              return '![img](${(snapshot.data as List).last ?? ''}/${match.group(1)})';
+            }),
             shrinkWrap: true,
             physics: const NeverScrollableScrollPhysics(),
             listItemCrossAxisAlignment: MarkdownListItemCrossAxisAlignment.start,
@@ -50,7 +51,16 @@ class MarkdownRender extends StatelessWidget {
             highlightColor: const Color.fromARGB(255, 245, 245, 245),
             child: Column(
               children: [
-                Container(height: 14, color: Colors.white,),
+                Padding(
+                  padding: EdgeInsets.fromLTRB(8, 16, 8, 8),
+                  child: Align(
+                    alignment: Alignment.centerLeft,
+                    child: FractionallySizedBox(
+                      widthFactor: 0.6,
+                      child: Container(height: 36, color: Colors.white,)
+                    ),
+                  )
+                ),
                 Padding(
                   padding: EdgeInsets.all(8),
                   child: RichText(

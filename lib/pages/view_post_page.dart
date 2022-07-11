@@ -2,10 +2,6 @@ import 'package:cs496_2nd_week/widgets/github_author_chip.dart';
 import 'package:cs496_2nd_week/widgets/markdown_render.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter/src/foundation/key.dart';
-import 'package:flutter/src/widgets/framework.dart';
-import 'package:flutter_markdown/flutter_markdown.dart';
-//import 'package:markdown/markdown.dart'
 import 'package:http/http.dart' as http;
 
 class ViewPostPage extends StatefulWidget {
@@ -24,7 +20,7 @@ class ViewPostPage extends StatefulWidget {
 class _ViewPostPageState extends State<ViewPostPage> {
 
   GlobalKey _key = GlobalKey();
-  double _position = 0.0;
+  double _position = 1000.0;
   
   @override
   Widget build(BuildContext context) {
@@ -34,7 +30,7 @@ class _ViewPostPageState extends State<ViewPostPage> {
         //backgroundColor: Color.fromRGBO(107, 203, 110, 1),
         elevation: 0,
         automaticallyImplyLeading: false,
-        backgroundColor: Colors.transparent,
+        backgroundColor: _position > 100 ? Colors.transparent : Color.fromRGBO(173, 203, 0, (1 - _position/100) > 1 ? 1 : (1 - _position/100)),
         leading: IconButton(
           icon: const Icon(Icons.arrow_back_ios, color: Colors.black,),
           onPressed: () => Navigator.of(context).pop(),

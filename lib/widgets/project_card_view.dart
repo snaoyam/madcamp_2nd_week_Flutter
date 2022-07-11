@@ -32,7 +32,7 @@ class _ProjectCardViewState extends State<ProjectCardView> {
             //snapshot.connectionState == ConnectionState.done
             return GestureDetector(
               onTap: () {
-                Navigator.push(context, MaterialPageRoute(builder: (context) => ViewPostPage(githuburl: widget.githuburl, name: snapshot.data?[0]['name'], description: widget.description, imageurl: [], authorchip: snapshot.data?[1])),);
+                Navigator.push(context, MaterialPageRoute(builder: (context) => ViewPostPage(githuburl: widget.githuburl, name: snapshot.data?[0]['name'], description: snapshot.data?[0]['description'], imageurl: widget.imageurl, authorchip: snapshot.data?[1])),);
               },
               child: Card(
                 margin: const EdgeInsetsDirectional.fromSTEB(8, 8, 8, 0),
