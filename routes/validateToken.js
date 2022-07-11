@@ -8,22 +8,18 @@ const validateToken = (req, res, next) => {
     jwt.verify(token, process.env.jwtsecret, (err, decoded) => {
       if (err) throw new Error('token invalid')
       res["session"] = decoded
-      if (decoded.exp * 1000 - Date.now() < 1000 * 60 * 60) {
+      if (decoded.exp * 1000 - Date.now() < 1000 * 60 * 60 * 24 * 30) {
         UserModel.findOne({ _id: decoded.id }, (err, user) => {
           if (err) throw new Error('user not found')
-          /*else if(!user.registeraccepted) {
-            return res.status(401).send({
-              'success': false,
-              'msg': 'Please wait for acception'
+          else {
+            user.generateToken((err, token) => {
+              if (err) throw new Error('error while generating token')
+              else {
+                res.setheader("token", token)
+                return next()
+              }
             })
-          }*/
-          user.generateToken((err, token) => {
-            if (err) throw new Error('error while generating token')
-            else {
-              res.cookie("auth", token)
-              return next()
-            }
-          })
+          }
         })
       }
       else
@@ -31,7 +27,7 @@ const validateToken = (req, res, next) => {
     })
   }
   catch (err) {
-    return res.status(401).send({
+    return res.clearCookie("auth").status(401).send({
       'success': false,
       'msg': 'Not authorized'
     })

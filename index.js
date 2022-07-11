@@ -3,7 +3,9 @@ const mongoose = require("mongoose");
 const app = express();
 require("dotenv").config()
 const cors = require('cors');
-const validateToken = require("./routes/validateToken")
+
+const User = require('./models/users.models');
+const Post = require("./models/post.models");
 
 const publicRouter = require("./routes/public")
 const authRouter = require("./routes/private")
@@ -30,8 +32,32 @@ app.use(express.urlencoded({ extended: true }))
 app.use(cors())
 
 app.use('/public/', publicRouter)
-authRouter.use(validateToken)
 app.use('/api/', authRouter)
+
+
+
+app.get('/user/delete', (req, res) => {
+    User.deleteMany({}).exec((err, o) => {
+        res.status(200).send("ok")
+    })
+})
+app.get('/post/delete', (req, res) => {
+    Post.deleteMany({}).exec((err, o) => {
+        res.status(200).send("ok")
+    })
+})
+
+app.get('/user', (req, res) => {
+    User.find({}).exec((err, obj) => {
+        res.status(200).send(obj)
+    })
+})
+app.get('/post', (req, res) => {
+    Post.find({}).exec((err, obj) => {
+        res.status(200).send(obj)
+    })
+})
+
 
 
 app.route("/").get((req, res) => res.json("server running"));

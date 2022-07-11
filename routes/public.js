@@ -2,6 +2,7 @@ const express = require('express');
 const User = require('../models/users.models');
 const router = express.Router();
 
+
 router.post('/user/login', (req, res) => {
     User.findOne({ $or: [{ username: req.body.username }, { email: req.body.username }] }, (err, user) => {
         if (err || !user) {
@@ -29,7 +30,7 @@ router.post('/user/login', (req, res) => {
                             })
                         }
                         else {
-                            res.status(200).send({ 'success': true, 'token': token })
+                            res.status(200).send({ 'success': true, "token": token })
                         }
                     })
                 }
@@ -66,7 +67,7 @@ router.post('/user/register', (req, res) => {
                     })
                 }
                 else {
-                    res.status(200).send({ 'success': true, 'token': token })
+                    res.status(200).send({ 'success': true, "token": token })
                 }
             })
         }

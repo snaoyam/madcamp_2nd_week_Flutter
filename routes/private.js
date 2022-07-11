@@ -1,109 +1,130 @@
 const express = require("express");
-const Posts = require("../models/projects.models");
+const Post = require("../models/post.models");
 const router = express.Router();
-var multiparty = require('multiparty');
-
-
-//사진 불러오기
 const multer = require("multer");
+const validateToken = require("../routes/validateToken")
+
+router.use(validateToken)
+
+
 const storage = multer.diskStorage({
-    destination:(req,file,cb)=>{
+    destination:(req, file, cb)=>{
         cb(null,"./uploads");
     },
-    filename: (req,file,cb) => {
-        cb(null, "req.body.title" + ".jpg");//project title로 사진 구분 
+    filename: (req, file, cb) => {
+        cb(null, file.originalname);
     },
 });
 
-const fileFilter = (req, file, cb) => {
-    if(file.mimetype == "image/jpeg" || file.mimetype == "image/png" || file.mimetype == "image/jpg"){
+const multerFilter = (req, file, cb) => {
+    if (file.mimetype == "image/jpeg" || file.mimetype == "image/png" || file.mimetype == "image/jpg") {
         cb(null, true);
-    }
-    else{
+    } else {
         cb(null, false);
     }
 };
 const upload = multer({
-    storage:storage,
-    limits:{
-        fileSize: 1024 * 1024 * 6,
+    storage: storage,
+    limits: {
+        fileSize: 1024 * 1024 * 100,
     },
-    fileFilter: fileFilter
+    fileFilter: multerFilter,
 });
 
-router
-    .route("/add/image")
-    .post(upload.single("img"),async (req,res)=>{
-        await Project.findOneAndUpdate(
-            {title: req.body.title},
-            {
-                $set:{
-                    img: req.file.path,
-                },
-            },
-            {new: true},
-           
-
-        )
-        .then((err, project) => {
-            if (!err){
-                const response = {
-                    message: "image added successfully updated",
-                    data: project
-                };
-            
-                return res.status(200).send(response);
-            }
-            else{
-                res.status(500).send(err);
-            }
-            })
-
-
-    });
-
-/////////////////write new project
-router.route("/write").post(upload.single("img"),(req, res) => {
-    console.log("writing project");
-    console.log(req)
-    const project = new Project({
+router.post('/post/new', upload.array('image', 24), (req, res) => {
+    new Post({
         title: req.body.title,
+        githuburl: req.body.githuburl,
         description: req.body.description,
-        githuburl : req.body.githuburl,
-        img: req.file.img,
-    });
-    project
-        .save()//mongodb 에 저장
-        .then(() => {
-            console.log("project written");
-            res.status(200).json("ok");
+        image: req.files.map(v => v['originalname']),
+        author: res.session._id,
+    })
+    .save((err, post) => {
+        if (err) {
+            console.log(err)
+            res.status(403).send({
+                'success': false,
+                'msg': 'Post failed'
+            })
+        }
+        else {
+            res.status(200).send({'success': true, 'postId': post._id})
+            console.log({'success': true, 'postId': post._id })
+        }
+    })
+})
+
+
+
+router.post('/post/home/', (req, res) => {
+    Post.find({ created_at: { $lt: req.body.time } })
+    .sort({ viewCount: -1 })
+    .skip(5 * (req.body.iterate - 1)).limit(5)
+    .exec((err, postList) => {
+        if(err) {
+            res.status(403).send({
+                'success': false,
+                'msg': 'get posts failed'
+            })
+        }
+        else {
+            res.status(200).send({ 'success': true, 'postList': postList.sort(() => Math.random() - 0.5)})
+        }
+    })
+    Post.updateMany({ $inc: { viewCount: 1 } }).exec()
+})
+
+
+
+router.post('/post/like', (req, res) => {
+    Post.findByIdAndUpdate(req.body.postId, { '$addToSet': { 'like': res.session._id }}, { returnOriginal: false }).exec((err, post) => {
+        if(err) {
+            console.log(err)
+            res.status(403).send({
+                'success': false,
+                'msg': 'like post failed'
+            })
+        }
+        else {
+            res.status(200).send({ 'success': true, 'post': post })
+        }
+    })
+})
+
+router.post('/post/undolike', (req, res) => {
+    Post.findByIdAndUpdate(req.body.postId, { '$pull': { 'like': res.session._id } }, { returnOriginal: false }).exec((err, post) => {
+        if (err) {
+            console.log(err)
+            res.status(403).send({
+                'success': false,
+                'msg': 'undo like post failed'
+            })
+        }
+        else {
+            res.status(200).send({ 'success': true, 'post': post })
+        }
+    })
+})
+
+
+
+router.post('/post/top/like', (req, res) => {
+    Post.find({  })
+        .sort({ like: 1 })
+        .skip( 15 * (req.body.iterate - 1)).limit(15)
+        .exec((err, postList) => {
+            if (err) {
+                res.status(403).send({
+                    'success': false,
+                    'msg': 'get posts failed'
+                })
+            }
+            else {
+                res.status(200).send({ 'success': true, 'postList': postList.sort(() => Math.random() - 0.5) })
+            }
         })
-        .catch((err) => {
-            res.status(403).json({ msg: err });
-        });
+})
 
-});
-
-
-// router.route("/write").post((req, res) => {
-//     console.log("writing project");
-//     console.log(req)
-//     const project = new Project({
-//         title: req.body.title,
-//         description: req.body.description,
-//         githuburl : req.body.githuburl
-//     });
-//     project
-//         .save()//mongodb 에 저장
-//         .then(() => {
-//             console.log("project written");
-//             res.status(200).json("ok");
-//         })
-//         .catch((err) => {
-//             res.status(403).json({ msg: err });
-//         });
-
-// });
 
 module.exports = router;
 

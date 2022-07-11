@@ -34,7 +34,10 @@ const UserSchema = Schema({
         type: [Schema.ObjectId],
         default: []
     },
-})
+    token: {
+        type: String,
+    },
+}, { timestamps: true })
 
 UserSchema.pre('save', async function (next) {
     const user = this
@@ -42,15 +45,13 @@ UserSchema.pre('save', async function (next) {
         const salt = await bcrypt.genSalt(10)
         user.password = await bcrypt.hash(user.password, salt)
     }
+
     return next()
 })
 
 UserSchema.methods.comparePassword = function (passwd, callback) {
-    console.log(passwd, this.password)
     bcrypt.compare(passwd, this.password, (err, match) => {
-        console.log(err)
         if (err) {
-            console.error(err)
             return callback(err, null)
         }
         callback(null, match)
@@ -59,7 +60,11 @@ UserSchema.methods.comparePassword = function (passwd, callback) {
 
 UserSchema.methods.generateToken = function (callback) {
     const user = this
-    const token = jwt.sign({ id: user._id.toHexString(), studentid: user.studentid, name: encodeURIComponent(user.name) }, process.env.jwtsecret, { expiresIn: '365d' })
+    const token = jwt.sign(
+        { _id: user._id.toHexString() }, 
+        process.env.jwtsecret, 
+        { expiresIn: '365d' }
+    )
     user.token = token
     user.save((err) => {
         if (err) {
