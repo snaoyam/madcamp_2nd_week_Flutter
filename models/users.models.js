@@ -17,6 +17,21 @@ const User = Schema({
         type: String,
         required: true
     },
+
+    projects:{
+        type: Number,
+        default: 0
+    },
+
+    views:{
+        type: Number,
+        default: 0
+    },
+
+    recommends:{
+        type: Number,
+        default: 0
+    },
 });
 
 module.exports = mongoose.model("User", User);

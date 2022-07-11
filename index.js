@@ -2,7 +2,8 @@ const express = require("express");
 const mongoose = require("mongoose");
 const Port = process.env.port || 8080;
 const app = express();
-const cors = require("cors")
+
+const cors = require('cors');
 
 mongoose.connect('mongodb://localhost:27017/myapp');
 // {
@@ -20,9 +21,12 @@ connection.once("open",()=>{
 
 //middleware
 app.use(express.json())
+
 app.use(cors())
+
 const userRoute = require("./routes/user");
+const projectRoute = require("./routes/project");
 app.use("/user",userRoute);
+app.use("/project",projectRoute);
 app.route("/").get((req,res)=>res.json("your first rest api 3 "));
 app.listen(Port,()=>console.log('your server is running on port '+Port));
-
