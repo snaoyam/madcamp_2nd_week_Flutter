@@ -12,7 +12,7 @@ router.route("/:username").get(middleware.checkToken,(req, res) => {
         if (err) res.status(500).json({ msg: err });
         res.json({
             data: result,
-            username: req.params.username,
+            username: req.params.username, 
         });
     });
 
@@ -54,6 +54,9 @@ router.route("/register").post((req, res) => {
         username: req.body.username,
         password: req.body.password,
         email: req.body.email,
+        projects : 0,
+        views : 0,
+        recommends : 0
     });
     user
         .save()//mongodb 에 저장
@@ -67,7 +70,7 @@ router.route("/register").post((req, res) => {
 
 });
 
-router.route("/update/:username").patch(middleware.checkToken,(req, res) => {
+router.route("/update/:username").patch((req, res) => {
     User.findOneAndUpdate(
         { username: req.params.username },
         { $set: { password: req.body.password } },
@@ -93,6 +96,58 @@ router.route("/delete/:username").delete((req, res) => {
     });
 
 });
+
+
+//////0710 update project count increase
+router.route("/projects/:username").patch((req, res) => {
+    User.findOneAndUpdate(
+        { username: req.params.username },
+        { $inc: { projects: 1 } },
+        (err, result) => {
+            if (err) return res.status(500).json({ msg: err });
+            const msg = {
+                msg: "projects successfully updated",
+                username: req.params.username,
+            };
+            return res.json(msg);
+        }
+    );
+});
+
+
+//////////////////////views increase
+router.route("/views/:username").patch((req, res) => {
+    User.findOneAndUpdate(
+        { username: req.params.username },
+        { $inc: { views: 1 } },
+        (err, result) => {
+            if (err) return res.status(500).json({ msg: err });
+            const msg = {
+                msg: "views successfully updated",
+                username: req.params.username,
+            };
+            return res.json(msg);
+        }
+    );
+});
+
+///recommedns increase
+router.route("/recommends/:username").patch((req, res) => {
+    User.findOneAndUpdate(
+        { username: req.params.username },
+        { $inc: { recommends: 1 } },
+        (err, result) => {
+            if (err) return res.status(500).json({ msg: err });
+            const msg = {
+                msg: "views successfully updated",
+                username: req.params.username,
+            };
+            return res.json(msg);
+        }
+    );
+});
+
+
 
 module.exports = router;
 
