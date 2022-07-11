@@ -88,7 +88,7 @@ class _LoginEmailPageState extends State<LoginEmailPage> {
                         if(idController.text.toString() != '' && passController.text.toString() != '') {
                           http.Response response = await _postRequest(idController.text, passController.text);
                           if(response.statusCode >= 200 && response.statusCode < 300) {
-                            print(jsonDecode(response.body)['token']);
+                            //print(jsonDecode(response.body)['token']);
                             await storage.write(
                               key: 'token',
                               value: jsonDecode(response.body)['token'],

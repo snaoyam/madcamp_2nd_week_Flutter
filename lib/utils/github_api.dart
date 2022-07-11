@@ -20,7 +20,7 @@ class GithubApi {
 
   contributors(String url) async {
     await dotenv.load();
-    Map<String, String?> _parse = parse(url);
+    Map<String, dynamic> _parse = parse(url);
     if(!_parse.values.contains(null)) {
       String _username = _parse['username']!;
       String _repository = _parse['repository']!;
@@ -38,10 +38,10 @@ class GithubApi {
     }
   }
 
-  projectInfo(String url, String? title, String? description) async {
-    title ??= '';
+  projectInfo(String url, String? name, String? description) async {
+    name ??= '';
     description ??= '';
-    if(title == '' || description == '') {
+    if(name == '' || description == '') {
       await dotenv.load();
       Map<String, String?> _parse = parse(url);
       if(!_parse.values.contains(null)) {
@@ -53,16 +53,33 @@ class GithubApi {
           headers: <String, String> { 'Content-Type': 'application/json', 'Authorization': 'token $_githubToken',}, 
         ).timeout(const Duration(seconds: 5), onTimeout: () { return http.Response('Error', 408); }); //!
         if(response.statusCode >= 200 && response.statusCode < 300) {
-          return {'name': title == '' ? (json.decode(response.body)['name'] ?? '') : title, 'description': description == '' ? (json.decode(response.body)['description'] ?? '') : description};
+          return {'name': name == '' ? (json.decode(response.body)['name'] ?? '') : name, 'description': description == '' ? (json.decode(response.body)['description'] ?? '') : description};
         }
         else {
-          return {'name': title, 'description': description};
+          return {'name': name, 'description': description};
         }
       }
     }
     else {
-      return {'name': title, 'description': description};
+      return {'name': name, 'description': description};
     }
   }
 
+  rawReadme(String url) async {
+    await dotenv.load();
+    Map<String, String?> _parse = parse(url);
+    if(!_parse.values.contains(null)) {
+      String _username = _parse['username']!;
+      String _repository = _parse['repository']!;
+      String? _githubToken = dotenv.env['GITHUBTOKEN'];
+      http.Response response = await http.get(
+        Uri.parse('https://api.github.com/repos/$_username/$_repository/contents/'),
+        headers: <String, String> { 'Content-Type': 'application/json', 'Authorization': 'token $_githubToken',}, 
+      ).timeout(const Duration(seconds: 5), onTimeout: () { return http.Response('Error', 408); });
+      if(response.statusCode >= 200 && response.statusCode < 300 && json.decode(response.body) is List) {
+       return (json.decode(response.body) as List).firstWhere((element) => element['name'] == 'README.md', orElse: () => {'download_url', ''})['download_url'];
+      }
+    }
+    return '';
+  }
 }
