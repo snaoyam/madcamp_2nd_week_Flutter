@@ -4,7 +4,6 @@ import 'package:cs496_2nd_week/widgets/project_card_view.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/src/foundation/key.dart';
 import 'package:flutter/src/widgets/framework.dart';
-import 'package:infinite_scroll_pagination/infinite_scroll_pagination.dart';
 
 class MainHome extends StatefulWidget {
   MainHome({Key? key}) : super(key: key);
@@ -41,7 +40,7 @@ class _MainHomeState extends State<MainHome> {
         scrollDirection: Axis.vertical,
         child: Column(
           children: [
-            ProjectCardView(githuburl: 'https://github.com/snaoyam/madcamp_1st_week', name: 'Madcamp 1st Week', description: 'nameadkkasd', imageurl: ['https://user-images.githubusercontent.com/68638211/126341027-2bdb5518-bcd4-4325-b034-52fde6ef7ec6.png'],),
+            ProjectCardView(githuburl: 'https://github.com/snaoyam/madcamp_1st_week', name: 'Madcamp 1st Week', description: 'nameadkkasd', imageurl: ['https://user-images.githubusercontent.com/93732046/177306011-41365749-0f61-4c25-8fa7-bee8d8227a7c.png', 'https://user-images.githubusercontent.com/68638211/126341027-2bdb5518-bcd4-4325-b034-52fde6ef7ec6.png'],),
             ProjectCardView(githuburl: 'https://github.com/snaoyam/madcamp_2nd_week_Flutter',),
             ProjectCardView(githuburl: 'https://github.com/snaoyam/madcamp_1st_week', name: 'Madcamp 1st Week', description: 'nameadkkasd', imageurl: ['https://user-images.githubusercontent.com/68638211/126341027-2bdb5518-bcd4-4325-b034-52fde6ef7ec6.png'],),
             ProjectCardView(githuburl: 'https://github.com/snaoyam/madcamp_1st_week', name: 'Madcamp 1st Week', description: 'nameadkkasd', imageurl: ['https://user-images.githubusercontent.com/68638211/126341027-2bdb5518-bcd4-4325-b034-52fde6ef7ec6.png'],),

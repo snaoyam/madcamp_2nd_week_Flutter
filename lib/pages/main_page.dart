@@ -1,13 +1,11 @@
 import 'package:cs496_2nd_week/pages/main_home.dart';
 import 'package:cs496_2nd_week/pages/main_my_info.dart';
 import 'package:cs496_2nd_week/pages/new_post_page.dart';
-import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter/src/foundation/key.dart';
 import 'package:flutter/src/widgets/framework.dart';
 import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
-import 'dart:developer';
 
 class MainPage extends StatefulWidget {
   final token;

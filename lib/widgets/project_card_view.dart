@@ -30,7 +30,6 @@ class _ProjectCardViewState extends State<ProjectCardView> {
         setState(() {
           
         });
-        print(pinfo);
       }
     ); 
     GithubApi().contributors(widget.githuburl).then((value){

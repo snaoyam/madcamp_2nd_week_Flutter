@@ -1,7 +1,9 @@
+import 'package:carousel_slider/carousel_slider.dart';
 import 'package:cs496_2nd_week/widgets/github_author_chip.dart';
 import 'package:cs496_2nd_week/widgets/markdown_render.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 
 
 class ViewPostPage extends StatefulWidget {
@@ -54,7 +56,23 @@ class _ViewPostPageState extends State<ViewPostPage> {
                   maxHeight: MediaQuery.of(context).size.height * 0.45,
                   maxWidth: MediaQuery.of(context).size.width,
                 ),
-                child: Container(color: Colors.green,)
+                child: Padding(
+                  padding: EdgeInsets.only(top: 48),
+                  child: CarouselSlider(
+                    options: CarouselOptions(),
+                    items: widget.imageurl.map((urli) {
+                      return Builder(
+                        builder: (BuildContext context) {
+                          return Container(
+                            width: MediaQuery.of(context).size.width,
+                            margin: EdgeInsets.symmetric(horizontal: 5.0),
+                            child: urli != null ? Image.network(urli, fit: BoxFit.cover) : null,
+                          );
+                        },
+                      );
+                    }).toList(),
+                  ),
+                ),
                 //Image.asset('assets/images/empty.png'),
               ),
               Padding(
