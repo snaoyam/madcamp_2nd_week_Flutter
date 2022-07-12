@@ -41,5 +41,5 @@ Mad Promo
 * 로그아웃 버튼을 누르면 첫번 째의 로그인 창으로 돌아오며, 카카오톡이던, 메일을 통해 로그인을 했던지 모두 로그아웃 처리로 된다.
 
 ### ++ 로딩중 
-![업로드중..](blob:https://velog.io/20a12691-ece1-4cee-b170-4843599fee17)
+![image](https://user-images.githubusercontent.com/86416273/178472396-1c265cb2-308d-40f2-b2ff-00a501e72cac.png)
 * 로그인이나 로그아웃 같이 구동 시간이 걸리는 작업에서는 사이사이에 loading page를 넣어 사용성을 강화했다. 
