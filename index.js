@@ -1,32 +1,67 @@
 const express = require("express");
 const mongoose = require("mongoose");
-const Port = process.env.port || 8080;
 const app = express();
-
+require("dotenv").config()
 const cors = require('cors');
 
-mongoose.connect('mongodb://localhost:27017/myapp');
-// {
-//     useNewUrlParser: true,
-//     useCreateIndex: true,
-//     useUnifiedTopology: true
-// });
+const User = require('./models/users.models');
+const Post = require("./models/post.models");
 
-const connection = mongoose.connection;
-connection.once("open",()=>{
+const publicRouter = require("./routes/public")
+const authRouter = require("./routes/private")
+
+const PORT = process.env.PORT ?? 8080;
+const DBHOST = process.env.DBHOST ?? 'localhost';
+const DBPORT = process.env.DBPORT ?? 27017;
+const DBPATH = process.env.DBPATH ?? 'database';
+
+mongoose.connect(`mongodb://${DBHOST}:${DBPORT}/${DBPATH}`, {
+    useNewUrlParser: true,
+    useUnifiedTopology: true
+})
+.then(() => {
     console.log("MongoDB connected");
-});
+})
+.catch(err => {
+    console.log("DB connection failed", err);
+    process.exit()
+})
 
-
-
-//middleware
 app.use(express.json())
-
+app.use(express.urlencoded({ extended: true }))
 app.use(cors())
+app.use('/uploads/', express.static('uploads'));
 
-const userRoute = require("./routes/user");
-const projectRoute = require("./routes/project");
-app.use("/user",userRoute);
-app.use("/project",projectRoute);
-app.route("/").get((req,res)=>res.json("your first rest api 3 "));
-app.listen(Port,()=>console.log('your server is running on port '+Port));
+app.use('/public/', publicRouter)
+app.use('/api/', authRouter)
+
+
+
+app.get('/user/delete', (req, res) => {
+    User.deleteMany({}).exec((err, o) => {
+        res.status(200).send("ok")
+    })
+})
+app.get('/post/delete', (req, res) => {
+    Post.deleteMany({}).exec((err, o) => {
+        res.status(200).send("ok")
+    })
+})
+app.get('/user', (req, res) => {
+    User.find({}).exec((err, obj) => {
+        res.status(200).send(obj)
+    })
+})
+app.get('/post', (req, res) => {
+    Post.find({}).exec((err, obj) => {
+        res.status(200).send(obj)
+    })
+})
+
+
+
+app.route("/").get((req, res) => res.json("server running"));
+
+app.listen(PORT, () => {
+    console.log(`Backend running on port ${PORT}.`)
+})
