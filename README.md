@@ -5,8 +5,9 @@
 Mad Promo
 ```
 ## 팀원
-* 성균관대 컴퓨터교육과 [이영준](https://github.com/leeyjwinter)
 * KAIST 전산학부 [문동우](https://github.com/snaoyam)
+* 성균관대 컴퓨터교육과 [이영준](https://github.com/leeyjwinter)
+
 ## 개발 환경
 * OS: Android, ios (targetSdk: flutter.targetSdkVersion)
 * Language: Kotlin, NodeJs, Mongodb
