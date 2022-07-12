@@ -14,19 +14,25 @@ Pro Pro
 * IDE: Android Studio, Visual Studio Code
 
 ## 프로젝트 소개
-### 시작 화면: Login
+### 시작 화면: Login 및 회원가입
+
 ![](https://velog.velcdn.com/images/leeyjwinter/post/b90f07c9-9b32-4a22-ab42-f4b57606008c/image.png)
 
 * 시작화면에서 로그인 창이 나오며 카카오 혹은 이메일을 통하여 로그인 및 회원가입을 할 수 있다.
 * 카카오로 로그인을 누르면 권한 창이 나오며 로그인을 완료하여 홈 탭으로 들어갈 수 있다.
 
+![](https://velog.velcdn.com/images/leeyjwinter/post/26064701-55dc-4bb0-b32f-4e5dbf4477fd/image.png)
+* Register as New Email User을 터치한다면 회원가입 창으로 넘어가며,
+* 여기서 이름, 몰입캠프 수강시기, 분반, 이메일 등의 정보를 주어 회원가입을 하고, 로그인을 할 수 있다.
+
 ### TAB 1: 홈
+![](https://velog.velcdn.com/images/leeyjwinter/post/0407a521-9dc6-44d7-87fe-df8e82bcd70c/image.png)
 
+* 홈 탭에서는 사용자들이 업로드한 프로젝트 홍보물들을 확인할 수 있다.
+* 사용자가 원한다면 + 버튼을 눌러 프로젝트 등록하기 폼을 열 수 있다.
+* 여기서 프로젝트 이름, github 링크, 그리고 부가 설명을 달아준 후 업로드를 한다.
+* 프로젝트 리스트 항목 중 하나를 터치하면 사용자가 등록한 정보와 깃허브 링크의 readme 파일을 자동으로 불러와 사용자에게 보여준다.
 
-* 휴대전화에 저장된 모든 연락처를 조회할 수 있다.
-* 앱을 처음 열면 연락처 접근(READ_CONTACTS) 및 전화 걸기(CALL_PHONE) 권한을 묻는 창을 띄운다.
-* 주소록에 접근해 저장된 사진과 이름, 전화번호를 가져와 RecyclerView로 보여준다.
-* 연락처 옆의 전화 버튼을 눌러 그 번호로 전화를 걸 수 있다.
 ### TAB 2: 도전과제
 !![](https://velog.velcdn.com/images/leeyjwinter/post/bed1e1f4-1f50-40f4-8128-887ed2ce2af2/image.png)
 
