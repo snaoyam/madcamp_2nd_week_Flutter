@@ -30,6 +30,7 @@ mongoose.connect(`mongodb://${DBHOST}:${DBPORT}/${DBPATH}`, {
 app.use(express.json())
 app.use(express.urlencoded({ extended: true }))
 app.use(cors())
+app.use('/uploads/', express.static('uploads'));
 
 app.use('/public/', publicRouter)
 app.use('/api/', authRouter)
@@ -46,7 +47,6 @@ app.get('/post/delete', (req, res) => {
         res.status(200).send("ok")
     })
 })
-
 app.get('/user', (req, res) => {
     User.find({}).exec((err, obj) => {
         res.status(200).send(obj)

@@ -49,7 +49,6 @@ router.post('/post/new', upload.array('image', 24), (req, res) => {
         }
         else {
             res.status(200).send({'success': true, 'postId': post._id})
-            console.log({'success': true, 'postId': post._id })
         }
     })
 })
