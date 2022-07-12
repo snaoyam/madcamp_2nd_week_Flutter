@@ -66,7 +66,7 @@ class _ViewPostPageState extends State<ViewPostPage> {
                           return Container(
                             width: MediaQuery.of(context).size.width,
                             margin: EdgeInsets.symmetric(horizontal: 5.0),
-                            child: urli != null ? Image.network(urli, fit: BoxFit.cover) : null,
+                            child: urli != null ? Image.network(urli, fit: BoxFit.cover, errorBuilder: (context, error, stackTrace) { return Container(color: const Color.fromARGB(255, 230, 230, 230),);} ) : null,
                           );
                         },
                       );

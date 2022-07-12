@@ -26,7 +26,7 @@ class _ProjectCardViewState extends State<ProjectCardView> {
     super.initState();
     GithubApi().projectInfo(widget.githuburl, widget.name, widget.description).then(
       (value){
-        pinfo = value;
+        pinfo = (value as Map<String, String>);
         setState(() {
           
         });
