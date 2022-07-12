@@ -64,7 +64,7 @@ class _SignupPageState extends State<SignupPage> {
       },
       body: json.encode(data),
       encoding: Encoding.getByName("utf-8"),
-    ).timeout(const Duration(seconds: 5), onTimeout: () { return http.Response('Error', 408); });
+    ).timeout(Duration(seconds: 5), onTimeout: () { return http.Response('Error', 408); });
     return response;
   }
 

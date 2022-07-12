@@ -16,6 +16,21 @@ class GithubAuthorChip extends StatefulWidget {
 
 class _GithubAuthorChipState extends State<GithubAuthorChip> {
   _GithubAuthorChipState();
+  late Image image1;
+
+  @override
+  void initState() {
+    image1 = Image.network(widget.profileimage ?? '', errorBuilder: (context, error, stackTrace) { return CircleAvatar(backgroundColor: Colors.black12,); });
+    super.initState();
+  }
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    precacheImage(image1.image, context);
+    
+  }
+
 
   @override
   Widget build(BuildContext context) {
@@ -27,13 +42,10 @@ class _GithubAuthorChipState extends State<GithubAuthorChip> {
           child: Row(
             children: [
               AspectRatio(aspectRatio: 1, child: ClipOval(
-                child: Image.network(
-                  widget.profileimage ?? '',
-                  errorBuilder: (context, error, stackTrace) { return CircleAvatar(backgroundColor: Colors.black12,); },
-                )
+                child: image1
               )),
               SizedBox(width: 2,),
-              Text(widget.name, style: TextStyle(fontSize: widget.height-4), textAlign: TextAlign.center,),
+              SizedBox(height: widget.height-4, child: Text(widget.name, style: TextStyle(fontSize: widget.height-4), textAlign: TextAlign.center,)),
               SizedBox(width: 6,),
             ],
           ),

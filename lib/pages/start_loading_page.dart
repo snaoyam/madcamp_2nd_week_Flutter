@@ -16,7 +16,7 @@ class StartLoadingPage extends StatefulWidget {
 }
 
 class _StartLoadingPageState extends State<StartLoadingPage> {
-  static const storage = FlutterSecureStorage();
+  final storage = FlutterSecureStorage();
   @override
   void initState() {
     super.initState();
@@ -38,7 +38,7 @@ class _StartLoadingPageState extends State<StartLoadingPage> {
       }
       String? token = await storage.read(key: 'token');
       while(stopwatch.elapsedMilliseconds < 500) {
-        await Future.delayed(const Duration(milliseconds: 200));
+        await Future.delayed(Duration(milliseconds: 200));
       }
       if(mounted) {
         if(token != null) {

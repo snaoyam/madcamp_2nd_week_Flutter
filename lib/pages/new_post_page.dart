@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'dart:io';
 import 'dart:typed_data';
+import 'package:cs496_2nd_week/pages/start_loading_page.dart';
 import 'package:cs496_2nd_week/widgets/imagepicker.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -12,6 +13,7 @@ import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:dotted_border/dotted_border.dart';
 import 'package:http/http.dart' as http;
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:http_parser/http_parser.dart';
 
 class NewPostPage extends StatefulWidget {
@@ -25,6 +27,7 @@ class NewPostPage extends StatefulWidget {
 class _NewPostPageState extends State<NewPostPage> {
   
   List<XFile>? _imageFileList = [];
+  FlutterSecureStorage storage = FlutterSecureStorage();
 
   void _addImageFile(XFile? value) {
     if(value != null) {
@@ -43,17 +46,20 @@ class _NewPostPageState extends State<NewPostPage> {
       'description': controller['description'] != null ? controller['description']!.text : "",
     };
     http.MultipartRequest request = http.MultipartRequest('POST', Uri.parse('http://$url:$port/api/post/new'));
-    request.headers.addAll(<String, String> {    });
+    String? token = await storage.read(key: 'token');
+    request.headers.addAll(<String, String> { 'token': token ?? ''});
     request.fields.addAll(data);
     for(XFile v in (_imageFileList ?? [])) {
       request.files.add(await http.MultipartFile.fromPath('image', v.path, contentType: MediaType('image', v.path.split('.').last)));
     }
-    request.send().then((response) async {
+    http.StreamedResponse streamedResponse = await request.send();
+    return await http.Response.fromStream(streamedResponse);
+    /*response.then((response) {
       if (response.statusCode >= 200 && response.statusCode < 300) {
-        return json.decode(await response.stream.bytesToString());
+        print(response.stream.bytesToString());
+        return json.decode(response.stream.bytesToString().asStream());
       }
-    }).onError((error, stackTrace) {return {'msg': 'error'};});
-    return {'msg': 'error'};
+    }).onError((error, stackTrace) {return {'success': false, 'msg': 'error'};});*/
   }
   _checkinput() {
     String checkurl = widget.newPostController['githuburl']?.text ?? '';
@@ -207,10 +213,18 @@ class _NewPostPageState extends State<NewPostPage> {
                     TextButton(onPressed: () async {
                       _checkinput();
                       if(widget.newPostController['githuburlError']?.text == '0') {
-                        Map<String, dynamic> response = await _postRequest(widget.newPostController, _imageFileList);
-                      }
-                      else {
-                        print('failed to upload');
+                        http.Response response = await _postRequest(widget.newPostController, _imageFileList);
+                        if(response.statusCode >= 200 && response.statusCode < 300 && jsonDecode(response.body)['success'] == true) {
+                          FocusManager.instance.primaryFocus?.unfocus();
+                          widget.newPostController['title']?.text = '';
+                          widget.newPostController['githuburl']?.text = '';
+                          widget.newPostController['githuburlError']?.text = '0';
+                          widget.newPostController['description']?.text = '';
+                          Navigator.of(context).pop();
+                        }
+                        else {
+                          print('failed to upload');
+                        }
                       }
                     }, style: ButtonStyle(
                       overlayColor: MaterialStateProperty.all(Colors.black12),
