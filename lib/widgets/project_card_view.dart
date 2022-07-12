@@ -45,7 +45,6 @@ class _ProjectCardViewState extends State<ProjectCardView> {
 
   @override
   Widget build(BuildContext context) {
-    print(widget.name);
     return AspectRatio(
       aspectRatio: 3 / 2,
       child: GestureDetector(
@@ -61,7 +60,8 @@ class _ProjectCardViewState extends State<ProjectCardView> {
           elevation: 3,
           child: Padding(
             padding: const EdgeInsets.all(16),
-            child: Column(
+            child: (con.isNotEmpty && pinfo.isNotEmpty) ? 
+            Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 FittedBox(
@@ -129,6 +129,45 @@ class _ProjectCardViewState extends State<ProjectCardView> {
                   ),
                 )
               ],
+            ) : Shimmer.fromColors(
+              baseColor: const Color.fromARGB(255, 230, 230, 230),
+              highlightColor: const Color.fromARGB(255, 245, 245, 245),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Container(height: 36, color: Colors.white, ),
+                  Expanded(
+                    child: Padding(
+                      padding: const EdgeInsets.only(top: 10),
+                      child: Row(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Expanded(
+                            flex:3,
+                            child: Padding(
+                              padding: const EdgeInsets.only(top: 10),
+                              child: RichText(
+                                text: TextSpan(
+                                  children: [ for(var i = 79; i > 0; i-- ) const WidgetSpan(
+                                    child: Padding(padding: EdgeInsets.only(bottom: 10), child: Text("█", style: TextStyle(fontSize: 12))),
+                                  ) ]
+                                )
+                              ),
+                            )
+                          ),
+                          Expanded(
+                            flex: 2,
+                            child: Padding(
+                              padding: const EdgeInsets.only(left: 10),
+                              child: Container(color: Colors.white,)
+                            ),
+                          )
+                        ],
+                      ),
+                    ),
+                  )
+                ],
+              )
             ),
           ),
         ),

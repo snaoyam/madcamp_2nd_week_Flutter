@@ -1,9 +1,11 @@
 import 'package:carousel_slider/carousel_slider.dart';
+import 'package:cs496_2nd_week/utils/github_api.dart';
 import 'package:cs496_2nd_week/widgets/github_author_chip.dart';
 import 'package:cs496_2nd_week/widgets/markdown_render.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
+import 'package:http/http.dart' as http;
 
 
 class ViewPostPage extends StatefulWidget {
@@ -24,7 +26,27 @@ class _ViewPostPageState extends State<ViewPostPage> {
   GlobalKey _key = GlobalKey();
   double _position = 1000.0;
   bool _tapCarouselSlider = false;
-  
+  bool _liked = false;
+
+  /*_pressLike(postId) {
+    String? url = dotenv.env['HOST'];
+    String? port = dotenv.env['PORT'];
+    if(url == null) { print("_postRequest"); return; }
+    Map<String, String> data = {
+      'postId': postId,
+    };
+    http.MultipartRequest request = http.MultipartRequest('POST', Uri.parse('http://$url:$port/api/post/new'));
+    String? token = await storage.read(key: 'token');
+    request.headers.addAll(<String, String> { 'token': token ?? ''});
+    request.fields.addAll(data);
+    for(XFile v in (_imageFileList ?? [])) {
+      request.files.add(await http.MultipartFile.fromPath('image', v.path, contentType: MediaType('image', v.path.split('.').last)));
+    }
+    http.StreamedResponse streamedResponse = await request.send();
+    return await http.Response.fromStream(streamedResponse);
+  }
+  */  
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -99,39 +121,64 @@ class _ViewPostPageState extends State<ViewPostPage> {
                 padding: const EdgeInsets.symmetric(vertical: 28, horizontal: 16),
                 child: Column(
                   children: [
-                    Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 12),
-                      child: Align(
-                        alignment: Alignment.centerLeft, 
-                        child: FittedBox(
-                          fit: BoxFit.fitWidth,
-                          child: Text(widget.name, style: const TextStyle(fontSize: 32, fontWeight: FontWeight.bold, height: 1.0),)
-                        )
-                      ),
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 14),
-                      child: Align(
-                        alignment: Alignment.centerLeft,
-                        child: Wrap(
-                          children: [ 
-                            for(var v in widget.authorchip) GithubAuthorChip(name: v['login'], profileimage: v['avatar_url'], height: 16)
-                          ],
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Expanded(
+                          flex: 5,
+                          child: Column(
+                            children: [
+                              Padding(
+                                padding: const EdgeInsets.symmetric(horizontal: 12),
+                                child: Align(
+                                  alignment: Alignment.centerLeft, 
+                                  child: FittedBox(
+                                    fit: BoxFit.fitWidth,
+                                    child: Text(widget.name, style: const TextStyle(fontSize: 32, fontWeight: FontWeight.bold, height: 1.0),)
+                                  )
+                                ),
+                              ),
+                              Padding(
+                                padding: const EdgeInsets.symmetric(horizontal: 14),
+                                child: Align(
+                                  alignment: Alignment.centerLeft,
+                                  child: Wrap(
+                                    children: [ 
+                                      for(var v in widget.authorchip) GithubAuthorChip(name: v['login'], profileimage: v['avatar_url'], height: 16)
+                                    ],
+                                  ),
+                                ),
+                              ),
+                              Padding(
+                                padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 8),
+                                child: Align(
+                                  alignment: Alignment.topLeft,
+                                  child: RichText(
+                                    text: TextSpan(
+                                      text: widget.description,
+                                      style: const TextStyle(color: Colors.black, fontSize: 16,),
+                                    ), 
+                                    overflow: TextOverflow.clip,
+                                  ),
+                                ),
+                              ),
+                            ],
+                          ),
                         ),
-                      ),
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 8),
-                      child: Align(
-                        alignment: Alignment.topLeft,
-                        child: RichText(
-                          text: TextSpan(
-                            text: widget.description,
-                            style: const TextStyle(color: Colors.black, fontSize: 16,),
-                          ), 
-                          overflow: TextOverflow.clip,
+                        Expanded(
+                          flex: 1,
+                          child: Center(
+                            child: IconButton(
+                              icon: Icon(Icons.favorite, color: _liked ? Colors.red : Colors.black45,),
+                              onPressed: () {
+                                setState(() {
+                                  _liked = !_liked;
+                                });
+                              },
+                            )
+                          ),
                         ),
-                      ),
+                      ],
                     ),
                     const Divider(color: Colors.black54, indent: 12, endIndent: 12, height: 28),
                     Padding(
