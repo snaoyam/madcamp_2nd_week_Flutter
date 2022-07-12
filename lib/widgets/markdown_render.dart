@@ -16,7 +16,7 @@ Future<List<String>> _getTextData(String githuburl) async{
   http.Response response = await http.get(
     Uri.parse(url),
     headers: <String, String> { 'Content-Type': 'application/json', 'Authorization': 'token $_githubToken',}, 
-  ).timeout(const Duration(seconds: 5), onTimeout: () { return http.Response('Error', 408); });
+  ).timeout(Duration(seconds: 5), onTimeout: () { return http.Response('Error', 408); });
   String urlprefix = url.split('/').sublist(0, 6).join('/');
   return [response.body, urlprefix];//  ('<img src="', '![img](');
 }

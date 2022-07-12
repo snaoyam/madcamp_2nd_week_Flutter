@@ -42,7 +42,7 @@ class _MainHomeState extends State<MainHome> {
         child: Column(
           children: [
             ProjectCardView(githuburl: 'https://github.com/snaoyam/madcamp_1st_week', name: 'Madcamp 1st Week', description: 'nameadkkasd', imageurl: ['https://user-images.githubusercontent.com/68638211/126341027-2bdb5518-bcd4-4325-b034-52fde6ef7ec6.png'],),
-            ProjectCardView(githuburl: 'https://github.com/snaoyam/madcamp_1st_week', name: 'Madcamp 1st Week', description: 'nameadkkasd', imageurl: [],),
+            ProjectCardView(githuburl: 'https://github.com/snaoyam/madcamp_2nd_week_Flutter',),
             ProjectCardView(githuburl: 'https://github.com/snaoyam/madcamp_1st_week', name: 'Madcamp 1st Week', description: 'nameadkkasd', imageurl: ['https://user-images.githubusercontent.com/68638211/126341027-2bdb5518-bcd4-4325-b034-52fde6ef7ec6.png'],),
             ProjectCardView(githuburl: 'https://github.com/snaoyam/madcamp_1st_week', name: 'Madcamp 1st Week', description: 'nameadkkasd', imageurl: ['https://user-images.githubusercontent.com/68638211/126341027-2bdb5518-bcd4-4325-b034-52fde6ef7ec6.png'],),
             ProjectCardView(githuburl: 'https://github.com/snaoyam/madcamp_1st_week', name: 'Madcamp 1st Week', description: 'nameadkkasd', imageurl: [],),

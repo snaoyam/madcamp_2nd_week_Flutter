@@ -28,7 +28,7 @@ class GithubApi {
       http.Response response = await http.get(
         Uri.parse('https://api.github.com/repos/$_username/$_repository/contributors'),
         headers: <String, String> { 'Content-Type': 'application/json', 'Authorization': 'token $_githubToken',}, 
-      ).timeout(const Duration(seconds: 5), onTimeout: () { return http.Response('Error', 408); }); //!
+      ).timeout(Duration(seconds: 5), onTimeout: () { return http.Response('Error', 408); }); //!
       if(response.statusCode >= 200 && response.statusCode < 300) {
         return json.decode(response.body);
       }
@@ -39,9 +39,10 @@ class GithubApi {
   }
 
   projectInfo(String url, String? name, String? description) async {
+    
     name ??= '';
     description ??= '';
-
+    
     if(name == '' || description == '') {
       await dotenv.load();
       Map<String, String?> _parse = parse(url);
@@ -52,8 +53,10 @@ class GithubApi {
         http.Response response = await http.get(
           Uri.parse('https://api.github.com/repos/$_username/$_repository'),
           headers: <String, String> { 'Content-Type': 'application/json', 'Authorization': 'token $_githubToken',}, 
-        ).timeout(const Duration(seconds: 5), onTimeout: () { return http.Response('Error', 408); }); //!
+        ).timeout(Duration(seconds: 5), onTimeout: () { return http.Response('Error', 408); }); //!
+        print(response.statusCode);
         if(response.statusCode >= 200 && response.statusCode < 300) {
+          print(json.decode(response.body));
           return {'name': name == '' ? (json.decode(response.body)['name'] ?? '') : name, 'description': description == '' ? (json.decode(response.body)['description'] ?? '') : description};
         }
         else {
@@ -76,7 +79,7 @@ class GithubApi {
       http.Response response = await http.get(
         Uri.parse('https://api.github.com/repos/$_username/$_repository/contents/'),
         headers: <String, String> { 'Content-Type': 'application/json', 'Authorization': 'token $_githubToken',}, 
-      ).timeout(const Duration(seconds: 5), onTimeout: () { return http.Response('Error', 408); });
+      ).timeout(Duration(seconds: 5), onTimeout: () { return http.Response('Error', 408); });
       if(response.statusCode >= 200 && response.statusCode < 300 && json.decode(response.body) is List) {
        return (json.decode(response.body) as List).firstWhere((element) => element['name'] == 'README.md', orElse: () => {'download_url', ''})['download_url'];
       }

@@ -7,7 +7,7 @@ import 'package:cached_network_image/cached_network_image.dart';
 
 
 class ProjectCardView extends StatefulWidget {
-  ProjectCardView({Key? key, this.name = '', this.description = '', this.imageurl = const [], required this.githuburl}) : super(key: key);
+  ProjectCardView({Key? key, this.name = ' ', this.description = ' ', this.imageurl = const [], required this.githuburl}) : super(key: key);
   String name;
   String description;
   List<String> imageurl;
@@ -18,33 +18,37 @@ class ProjectCardView extends StatefulWidget {
 }
 
 class _ProjectCardViewState extends State<ProjectCardView> {
-
-  @override
+  Map<String, String> pinfo = {};
+  List<dynamic> con = [];
+  @override 
   void initState() {
-    Map<String, dynamic> contributors = GithubApi().contributors(widget.githuburl);
+    // TODO: implement initState
     super.initState();
+    GithubApi().projectInfo(widget.githuburl, widget.name, widget.description).then(
+      (value){
+        pinfo = value;
+        setState(() {
+          
+        });
+        print(pinfo);
+      }
+    ); 
+    GithubApi().contributors(widget.githuburl).then((value){
+      con = value;
+      setState(() {
+
+      });
+
+    });
   }
 
-  @override
-  void didChangeDependencies() {
-    super.didChangeDependencies();
-    //precacheImage(image1.image, context); 
-  }
   @override
   Widget build(BuildContext context) {
     return AspectRatio(
       aspectRatio: 3 / 2,
-      child: FutureBuilder<List<dynamic>>(
-        future: Future.wait([
-          GithubApi().projectInfo(widget.githuburl, widget.name, widget.description), 
-          GithubApi().contributors(widget.githuburl),
-        ]),
-        builder: (context, AsyncSnapshot<List<dynamic>> snapshot) {
-          if(snapshot.hasData) {
-            //snapshot.connectionState == ConnectionState.done
-            return GestureDetector(
+      child: GestureDetector(
               onTap: () {
-                Navigator.push(context, MaterialPageRoute(builder: (context) => ViewPostPage(githuburl: widget.githuburl, name: snapshot.data?[0]['name'], description: snapshot.data?[0]['description'], imageurl: widget.imageurl, authorchip: snapshot.data?[1])),);
+                Navigator.push(context, MaterialPageRoute(builder: (context) => ViewPostPage(githuburl: widget.githuburl, name: pinfo['name']??' ', description: pinfo['description']??' ', imageurl: widget.imageurl, authorchip: con)),);
               },
               child: Card(
                 margin: const EdgeInsetsDirectional.fromSTEB(8, 8, 8, 0),
@@ -60,7 +64,7 @@ class _ProjectCardViewState extends State<ProjectCardView> {
                     children: [
                       FittedBox(
                         fit: BoxFit.fitWidth, 
-                        child: Text(snapshot.data?[0]['name'] ?? '', style: const TextStyle(fontSize: 32, fontWeight: FontWeight.bold, height: 1.0),)
+                        child: Text(pinfo['name'] ?? ' ', style: const TextStyle(fontSize: 32, fontWeight: FontWeight.bold, height: 1.0),)
                       ),
                       Expanded(
                         child: Row(
@@ -77,7 +81,7 @@ class _ProjectCardViewState extends State<ProjectCardView> {
                                         overflow: TextOverflow.fade,
                                         maxLines: 2,
                                         text: TextSpan(
-                                          children: [ for(var v in (snapshot.data?[1] as List<dynamic>)) WidgetSpan(
+                                          children: [ for(var v in (con as List<dynamic>)) WidgetSpan(
                                             child: GithubAuthorChip(name: v['login'], profileimage: v['avatar_url'], height: 16),
                                           ) ]
                                         )
@@ -98,7 +102,7 @@ class _ProjectCardViewState extends State<ProjectCardView> {
                                       alignment: Alignment.topLeft,
                                       child: RichText(
                                         text: TextSpan(
-                                          text: snapshot.data?[0]['description'],
+                                          text: pinfo['description'],
                                           style: const TextStyle(color: Colors.black, fontSize: 14,),
                                         ), 
                                         overflow: TextOverflow.clip,
@@ -113,7 +117,7 @@ class _ProjectCardViewState extends State<ProjectCardView> {
                               child: Padding(
                                 padding: const EdgeInsets.only(top: 10, left: 10),
                                 child: Image.network( //CachedNetworkImage
-                                  (widget.imageurl.isNotEmpty ? widget.imageurl.first : ''),
+                                  (widget.imageurl.isNotEmpty ? widget.imageurl.first : ' '),
                                   fit: BoxFit.cover, 
                                   errorBuilder: (context, error, stackTrace) { return Container(color: const Color.fromARGB(255, 230, 230, 230),); },
                                 ),
@@ -126,63 +130,9 @@ class _ProjectCardViewState extends State<ProjectCardView> {
                   ),
                 ),
               ),
-            );
-          }
-          else {
-            return Card(
-              margin: const EdgeInsetsDirectional.fromSTEB(8, 8, 8, 0),
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(6),
-              ),
-              color: Colors.white,
-              elevation: 3,
-              child: Padding(
-                padding: const EdgeInsets.all(16),
-                child: Shimmer.fromColors(
-                  baseColor: const Color.fromARGB(255, 230, 230, 230),
-                  highlightColor: const Color.fromARGB(255, 245, 245, 245),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Container(height: 36, color: Colors.white, ),
-                      Expanded(
-                        child: Padding(
-                          padding: const EdgeInsets.only(top: 10),
-                          child: Row(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Expanded(
-                                flex:3,
-                                child: Padding(
-                                  padding: const EdgeInsets.only(top: 10),
-                                  child: RichText(
-                                    text: TextSpan(
-                                      children: [ for(var i = 79; i > 0; i-- ) const WidgetSpan(
-                                        child: Padding(padding: EdgeInsets.only(bottom: 10), child: Text("█", style: TextStyle(fontSize: 12))),
-                                      ) ]
-                                    )
-                                  ),
-                                )
-                              ),
-                              Expanded(
-                                flex: 2,
-                                child: Padding(
-                                  padding: const EdgeInsets.only(left: 10),
-                                  child: Container(color: Colors.white,)
-                                ),
-                              )
-                            ],
-                          ),
-                        ),
-                      )
-                    ],
-                  )
-                ),
-              ),
-            );
-          }
-        }
-      ),
+            )
     );
-  }
+    }
+            
 } 
+
