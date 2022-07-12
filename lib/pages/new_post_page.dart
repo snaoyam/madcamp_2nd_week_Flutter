@@ -32,7 +32,6 @@ class _NewPostPageState extends State<NewPostPage> {
   }
 
   _postRequest(Map<String, TextEditingController> controller, List<XFile>? fileList) async {
-    await dotenv.load();
     String? url = dotenv.env['HOST'];
     String? port = dotenv.env['PORT'];
     if(url == null) { print("_postRequest"); return; }
@@ -217,7 +216,7 @@ class _NewPostPageState extends State<NewPostPage> {
                           widget.newPostController['githuburlError']?.text = '0';
                           widget.newPostController['description']?.text = '';
                           Navigator.of(context).pop();
-                          
+
                         }
                         else {
                           print('failed to upload');

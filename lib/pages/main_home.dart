@@ -36,7 +36,6 @@ class _MainHomeState extends State<MainHome> {
   
 
   _postRequest(int it, int time) async {
-    await dotenv.load();
     String? url = dotenv.env['HOST'];
     String? port = dotenv.env['PORT'];
     String? token = await storage.read(key: 'token');
@@ -88,18 +87,33 @@ class _MainHomeState extends State<MainHome> {
         }
         return false;
       },
-      child: SingleChildScrollView(
-        scrollDirection: Axis.vertical,
-        child: Column(
-          children: [
-            for(var post in postList) ProjectCardView(githuburl: post['githuburl'], name: post['title'], description: post['description'], imageurl: (post['image'] as List<dynamic>),),
-            //ProjectCardView(githuburl: 'https://github.com/snaoyam/madcamp_1st_week', name: 'Madcamp 1st Week', description: 'nameadkkasd', imageurl: ['https://user-images.githubusercontent.com/93732046/177306011-41365749-0f61-4c25-8fa7-bee8d8227a7c.png', 'https://user-images.githubusercontent.com/68638211/126341027-2bdb5518-bcd4-4325-b034-52fde6ef7ec6.png'],),
-            //ProjectCardView(githuburl: 'https://github.com/snaoyam/madcamp_2nd_week_Flutter',),
-            //ProjectCardView(githuburl: 'https://github.com/snaoyam/madcamp_1st_week', name: 'Madcamp 1st Week', description: 'nameadkkasd', imageurl: ['https://user-images.githubusercontent.com/68638211/126341027-2bdb5518-bcd4-4325-b034-52fde6ef7ec6.png'],),
-            //ProjectCardView(githuburl: 'https://github.com/snaoyam/madcamp_1st_week', name: 'Madcamp 1st Week', description: 'nameadkkasd', imageurl: ['https://user-images.githubusercontent.com/68638211/126341027-2bdb5518-bcd4-4325-b034-52fde6ef7ec6.png'],),
-            //ProjectCardView(githuburl: 'https://github.com/snaoyam/madcamp_1st_week', description: 'nameadkkasd', imageurl: [],),
-            SizedBox(height: 16, key: _key,),
-          ],
+      child: RefreshIndicator(
+        onRefresh: () async {
+          _iterate = 1;
+          _now = DateTime.now().millisecondsSinceEpoch;
+          postList.clear();
+          _postRequest(_iterate++, _now).then((response) {
+            setState(() {
+              for(var v in jsonDecode(response.body)['postList']) {
+                postList.add(v);
+              }
+            });
+          });
+          return Future<void>.delayed(Duration(seconds: 1));
+        },
+        child: SingleChildScrollView(
+          physics: AlwaysScrollableScrollPhysics(),
+          scrollDirection: Axis.vertical,
+          child: SizedBox(
+            height: MediaQuery.of(context).size.height,
+            width: MediaQuery.of(context).size.width,
+            child: Column(
+              children: [
+                for(var post in postList) ProjectCardView(githuburl: post['githuburl'], name: post['title'], description: post['description'], imageurl: (post['image'] as List<dynamic>),),
+                SizedBox(height: 16, key: _key,),
+              ],
+            ),
+          ),
         ),
       ),
     );

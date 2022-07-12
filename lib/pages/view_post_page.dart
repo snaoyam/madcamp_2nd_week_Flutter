@@ -23,6 +23,7 @@ class _ViewPostPageState extends State<ViewPostPage> {
 
   GlobalKey _key = GlobalKey();
   double _position = 1000.0;
+  bool _tapCarouselSlider = false;
   
   @override
   Widget build(BuildContext context) {
@@ -34,7 +35,10 @@ class _ViewPostPageState extends State<ViewPostPage> {
         automaticallyImplyLeading: false,
         backgroundColor: _position > 100 ? Colors.transparent : Color.fromRGBO(173, 203, 0, (1 - _position/100) > 1 ? 1 : (1 - _position/100)),
         leading: IconButton(
-          icon: const Icon(Icons.arrow_back_ios, color: Colors.black,),
+          icon: Icon(
+            Icons.arrow_back_ios, 
+            color: _position > 100 ? Colors.white : Color.fromRGBO(0, 0, 0, (1 - _position/100) > 1 ? 1 : (1 - _position/100)),
+          ),
           onPressed: () => Navigator.of(context).pop(),
         ),
       ),
@@ -51,29 +55,44 @@ class _ViewPostPageState extends State<ViewPostPage> {
         child: SingleChildScrollView(
           child: Column(
             children: [
-              ConstrainedBox(
-                constraints: BoxConstraints(
-                  maxHeight: MediaQuery.of(context).size.height * 0.45,
-                  maxWidth: MediaQuery.of(context).size.width,
-                ),
-                child: Padding(
-                  padding: EdgeInsets.only(top: 48),
+              Padding(
+                padding: EdgeInsets.only(top: 48),
+                child: GestureDetector(
+                  onTap: () {
+                    setState(() {
+                      _tapCarouselSlider = !_tapCarouselSlider;
+                    });
+                  },
                   child: CarouselSlider(
-                    options: CarouselOptions(),
+                    options: CarouselOptions(
+                      viewportFraction: 1,
+                      enableInfiniteScroll: false,
+                      padEnds: true,
+                      height: MediaQuery.of(context).size.height * (_tapCarouselSlider ? 0.9 : 0.45)
+                    ),
                     items: widget.imageurl.map((urli) {
                       return Builder(
                         builder: (BuildContext context) {
                           return Container(
                             width: MediaQuery.of(context).size.width,
-                            margin: EdgeInsets.symmetric(horizontal: 5.0),
-                            child: urli != null ? Image.network('http://${dotenv.env["HOST"]}:${dotenv.env["PORT"]}/uploads/$urli', fit: BoxFit.cover, errorBuilder: (context, error, stackTrace) { return Container(color: const Color.fromARGB(255, 230, 230, 230),);} ) : null,
+                            margin: EdgeInsets.symmetric(horizontal: 5),
+                            child: urli != null ? ClipRRect(
+                              borderRadius: BorderRadius.circular(8),
+                              child: Image.network(
+                                'http://${dotenv.env["HOST"]}:${dotenv.env["PORT"]}/uploads/$urli', 
+                                fit: BoxFit.cover, 
+                                errorBuilder: (context, error, stackTrace) {
+                                  print(error);
+                                  return ClipRRect(borderRadius: BorderRadius.circular(8), child: Container(color: const Color.fromARGB(255, 230, 230, 230),));
+                                }
+                              ),
+                            ) : null,
                           );
                         },
                       );
                     }).toList(),
                   ),
                 ),
-                //Image.asset('assets/images/empty.png'),
               ),
               Padding(
                 key: _key,

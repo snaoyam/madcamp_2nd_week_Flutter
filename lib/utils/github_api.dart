@@ -19,7 +19,6 @@ class GithubApi {
   }
 
   contributors(String url) async {
-    await dotenv.load();
     Map<String, dynamic> _parse = parse(url);
     if(!_parse.values.contains(null)) {
       String _username = _parse['username']!;
@@ -44,7 +43,6 @@ class GithubApi {
     description ??= '';
         
     if(name == '' || description == '' || name == ' ' || description == ' ') {
-      await dotenv.load();
       Map<String, String?> _parse = parse(url);
       if(!_parse.values.contains(null)) {
         String _username = _parse['username']!;
@@ -72,7 +70,6 @@ class GithubApi {
   }
 
   rawReadme(String url) async {
-    await dotenv.load();
     Map<String, String?> _parse = parse(url);
     if(!_parse.values.contains(null)) {
       String _username = _parse['username']!;
