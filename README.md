@@ -2,7 +2,7 @@
 > 2022 여름 MadCamp 2분반 문동우, 이영준 팀
 ## 프로젝트 이름
 ```
-Mad Promo
+Pro Pro
 ```
 ## 팀원
 * KAIST 전산학부 [문동우](https://github.com/snaoyam)
