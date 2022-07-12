@@ -19,7 +19,6 @@ class GithubApi {
   }
 
   contributors(String url) async {
-    await dotenv.load();
     Map<String, dynamic> _parse = parse(url);
     if(!_parse.values.contains(null)) {
       String _username = _parse['username']!;
@@ -42,9 +41,8 @@ class GithubApi {
     
     name ??= '';
     description ??= '';
-    
-    if(name == '' || description == '') {
-      await dotenv.load();
+        
+    if(name == '' || description == '' || name == ' ' || description == ' ') {
       Map<String, String?> _parse = parse(url);
       if(!_parse.values.contains(null)) {
         String _username = _parse['username']!;
@@ -54,10 +52,12 @@ class GithubApi {
           Uri.parse('https://api.github.com/repos/$_username/$_repository'),
           headers: <String, String> { 'Content-Type': 'application/json', 'Authorization': 'token $_githubToken',}, 
         ).timeout(Duration(seconds: 5), onTimeout: () { return http.Response('Error', 408); }); //!
-        print(response.statusCode);
+        print(_username);
+        print(_repository);
+        String _netName = jsonDecode(response.body)['name'];
+        String _netDescription = jsonDecode(response.body)['description'];
         if(response.statusCode >= 200 && response.statusCode < 300) {
-          print(json.decode(response.body));
-          return {'name': name == '' ? (json.decode(response.body)['name'] ?? '') : name, 'description': description == '' ? (json.decode(response.body)['description'] ?? '') : description};
+          return {'name': (name == '' || name == ' ') ? _netName : name, 'description': (description == '' || description == ' ') ? _netDescription : description};
         }
         else {
           return {'name': name, 'description': description};
@@ -70,7 +70,6 @@ class GithubApi {
   }
 
   rawReadme(String url) async {
-    await dotenv.load();
     Map<String, String?> _parse = parse(url);
     if(!_parse.values.contains(null)) {
       String _username = _parse['username']!;

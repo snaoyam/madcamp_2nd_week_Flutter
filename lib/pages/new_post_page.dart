@@ -1,15 +1,11 @@
 import 'dart:convert';
 import 'dart:io';
-import 'dart:typed_data';
-import 'package:cs496_2nd_week/pages/start_loading_page.dart';
-import 'package:cs496_2nd_week/widgets/imagepicker.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter/src/foundation/key.dart';
 import 'package:flutter/src/widgets/framework.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
-import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:dotted_border/dotted_border.dart';
 import 'package:http/http.dart' as http;
@@ -36,7 +32,6 @@ class _NewPostPageState extends State<NewPostPage> {
   }
 
   _postRequest(Map<String, TextEditingController> controller, List<XFile>? fileList) async {
-    await dotenv.load();
     String? url = dotenv.env['HOST'];
     String? port = dotenv.env['PORT'];
     if(url == null) { print("_postRequest"); return; }
@@ -221,6 +216,7 @@ class _NewPostPageState extends State<NewPostPage> {
                           widget.newPostController['githuburlError']?.text = '0';
                           widget.newPostController['description']?.text = '';
                           Navigator.of(context).pop();
+
                         }
                         else {
                           print('failed to upload');
@@ -334,7 +330,7 @@ class _NewPostPageState extends State<NewPostPage> {
                         TextFormField(
                           controller: widget.newPostController['githuburl'],
                           cursorColor: Colors.black,
-                          inputFormatters: [FilteringTextInputFormatter.allow(RegExp("[0-9a-zA-Z&\$+.,/:;=?@#]"))],
+                          inputFormatters: [FilteringTextInputFormatter.allow(RegExp("[0-9a-zA-Z&\$+_.,/:;=?@#]"))],
                           decoration: const InputDecoration(
                             border: InputBorder.none,
                             focusedBorder: InputBorder.none,
