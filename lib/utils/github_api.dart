@@ -54,6 +54,8 @@ class GithubApi {
           Uri.parse('https://api.github.com/repos/$_username/$_repository'),
           headers: <String, String> { 'Content-Type': 'application/json', 'Authorization': 'token $_githubToken',}, 
         ).timeout(Duration(seconds: 5), onTimeout: () { return http.Response('Error', 408); }); //!
+        print(_username);
+        print(_repository);
         String _netName = jsonDecode(response.body)['name'];
         String _netDescription = jsonDecode(response.body)['description'];
         if(response.statusCode >= 200 && response.statusCode < 300) {

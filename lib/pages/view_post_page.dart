@@ -9,7 +9,7 @@ import 'package:flutter_dotenv/flutter_dotenv.dart';
 class ViewPostPage extends StatefulWidget {
   ViewPostPage({Key? key, this.description = '', required this.imageurl, this.name = '', required this.githuburl, this.authorchip = const []}) : super(key: key);
   String name;
-  final List<String?> imageurl;
+  final List<dynamic?> imageurl;
   String description;
   final String githuburl;
   List<dynamic> authorchip;
@@ -66,7 +66,7 @@ class _ViewPostPageState extends State<ViewPostPage> {
                           return Container(
                             width: MediaQuery.of(context).size.width,
                             margin: EdgeInsets.symmetric(horizontal: 5.0),
-                            child: urli != null ? Image.network(urli, fit: BoxFit.cover, errorBuilder: (context, error, stackTrace) { return Container(color: const Color.fromARGB(255, 230, 230, 230),);} ) : null,
+                            child: urli != null ? Image.network('http://${dotenv.env["HOST"]}:${dotenv.env["PORT"]}/uploads/$urli', fit: BoxFit.cover, errorBuilder: (context, error, stackTrace) { return Container(color: const Color.fromARGB(255, 230, 230, 230),);} ) : null,
                           );
                         },
                       );

@@ -217,6 +217,7 @@ class _NewPostPageState extends State<NewPostPage> {
                           widget.newPostController['githuburlError']?.text = '0';
                           widget.newPostController['description']?.text = '';
                           Navigator.of(context).pop();
+                          
                         }
                         else {
                           print('failed to upload');
@@ -330,7 +331,7 @@ class _NewPostPageState extends State<NewPostPage> {
                         TextFormField(
                           controller: widget.newPostController['githuburl'],
                           cursorColor: Colors.black,
-                          inputFormatters: [FilteringTextInputFormatter.allow(RegExp("[0-9a-zA-Z&\$+.,/:;=?@#]"))],
+                          inputFormatters: [FilteringTextInputFormatter.allow(RegExp("[0-9a-zA-Z&\$+_.,/:;=?@#]"))],
                           decoration: const InputDecoration(
                             border: InputBorder.none,
                             focusedBorder: InputBorder.none,
