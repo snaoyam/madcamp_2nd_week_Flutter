@@ -1,9 +1,6 @@
-# cs496_2ndWeek
+# **프로프리** **Pro**ject **Pre**sent
 > 2022 여름 MadCamp 2분반 문동우, 이영준 팀
-## 프로젝트 이름
-```
-프로포폴
-```
+
 ## 팀원
 * KAIST 전산학부 [문동우](https://github.com/snaoyam)
 * 성균관대 컴퓨터교육과 [이영준](https://github.com/leeyjwinter)
